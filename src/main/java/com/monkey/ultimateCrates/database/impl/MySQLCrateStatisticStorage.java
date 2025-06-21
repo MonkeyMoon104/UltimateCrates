@@ -7,7 +7,7 @@ import org.bukkit.OfflinePlayer;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MySQLCrateStatisticStorage implements CrateStatisticStorage {
@@ -24,22 +24,22 @@ public class MySQLCrateStatisticStorage implements CrateStatisticStorage {
     public void createTable() {
         try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS crate_stats (" +
-                    "uuid VARCHAR(36) NOT NULL, " +
+                    "player_name VARCHAR(32) NOT NULL, " +
                     "crate_id VARCHAR(64) NOT NULL, " +
                     "amount_opened INT NOT NULL DEFAULT 0, " +
-                    "PRIMARY KEY (uuid, crate_id));");
+                    "PRIMARY KEY (player_name, crate_id));");
         } catch (SQLException e) {
             logger.severe("Errore nella creazione della tabella crate_stats (MySQL): " + e.getMessage());
         }
     }
 
     @Override
-    public void incrementCrateOpen(String uuid, String crateId) {
+    public void incrementCrateOpen(String playerName, String crateId) {
         try (PreparedStatement stmt = connection.prepareStatement(
-                "INSERT INTO crate_stats (uuid, crate_id, amount_opened) VALUES (?, ?, 1) " +
+                "INSERT INTO crate_stats (player_name, crate_id, amount_opened) VALUES (?, ?, 1) " +
                         "ON DUPLICATE KEY UPDATE amount_opened = amount_opened + 1"
         )) {
-            stmt.setString(1, uuid);
+            stmt.setString(1, playerName);
             stmt.setString(2, crateId);
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -48,11 +48,11 @@ public class MySQLCrateStatisticStorage implements CrateStatisticStorage {
     }
 
     @Override
-    public int getCrateOpens(String uuid, String crateId) {
+    public int getCrateOpens(String playerName, String crateId) {
         try (PreparedStatement stmt = connection.prepareStatement(
-                "SELECT amount_opened FROM crate_stats WHERE uuid = ? AND crate_id = ?"
+                "SELECT amount_opened FROM crate_stats WHERE player_name = ? AND crate_id = ?"
         )) {
-            stmt.setString(1, uuid);
+            stmt.setString(1, playerName);
             stmt.setString(2, crateId);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -66,12 +66,35 @@ public class MySQLCrateStatisticStorage implements CrateStatisticStorage {
     }
 
     @Override
+    public void resetPlayerStats(String playerName) {
+        String sql = "DELETE FROM crate_stats WHERE player_name = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, playerName);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Errore resettando stats del giocatore MySQL", e);
+        }
+    }
+
+    @Override
+    public void resetAllStats() {
+        String sql = "DELETE FROM crate_stats";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Errore resettando tutte le stats MySQL", e);
+        }
+    }
+
+    @Override
     public List<LeaderboardEntry> getLeaderboard(String crateId, int page, int rowPerPage) {
         List<LeaderboardEntry> leaderboard = new ArrayList<>();
         int offset = (page - 1) * rowPerPage;
 
         try (PreparedStatement stmt = connection.prepareStatement(
-                "SELECT uuid, amount_opened FROM crate_stats WHERE crate_id = ? " +
+                "SELECT player_name, amount_opened FROM crate_stats WHERE crate_id = ? " +
                         "ORDER BY amount_opened DESC LIMIT ? OFFSET ?"
         )) {
             stmt.setString(1, crateId);
@@ -80,10 +103,9 @@ public class MySQLCrateStatisticStorage implements CrateStatisticStorage {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    String uuid = rs.getString("uuid");
+                    String playerName = rs.getString("player_name");
                     int opened = rs.getInt("amount_opened");
-                    OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
-                    leaderboard.add(new LeaderboardEntry(player.getName(), opened));
+                    leaderboard.add(new LeaderboardEntry(playerName, opened));
                 }
             }
         } catch (SQLException e) {

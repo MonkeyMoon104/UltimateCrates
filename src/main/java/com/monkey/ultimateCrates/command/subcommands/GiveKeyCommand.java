@@ -101,10 +101,10 @@ public class GiveKeyCommand implements SubCommand {
             }
         } else {
             try {
-                plugin.getDatabaseManager().getVirtualKeyStorage().giveKeys(target.getUniqueId(), crate.getId(), amount);
+                plugin.getDatabaseManager().getVirtualKeyStorage().giveKeys(target.getName(), crate.getId(), amount);
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"Hai dato " + amount + " chiave virtuale della crate " + crate.getDisplayName() + " a " + target.getName()));
 
-                int totalKeys = plugin.getDatabaseManager().getVirtualKeyStorage().getKeys(target.getUniqueId(), crate.getId());
+                int totalKeys = plugin.getDatabaseManager().getVirtualKeyStorage().getKeys(target.getName(), crate.getId());
 
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&',target.getName() + " ha ora un totale di " + totalKeys + " chiavi virtuali della crate " + crate.getDisplayName()));
 

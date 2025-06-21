@@ -79,13 +79,13 @@ public class CrateOpenListener implements Listener {
             }
 
             VirtualKeyStorage storage = plugin.getDatabaseManager().getVirtualKeyStorage();
-            int keys = storage.getKeys(player.getUniqueId(), crate.getId());
+            int keys = storage.getKeys(player.getName(), crate.getId());
             if (keys < 1) {
                 player.sendMessage(ChatColor.RED + "Non hai abbastanza chiavi virtuali per aprire questa crate.");
                 return;
             }
 
-            storage.takeKeys(player.getUniqueId(), crate.getId(), 1);
+            storage.takeKeys(player.getName(), crate.getId(), 1);
             crateWinPrize(player, crate);
             return;
         }
@@ -115,7 +115,7 @@ public class CrateOpenListener implements Listener {
                     () -> plugin.getLogger().warning("Animazione non trovata: " + animationName + " nella crate: " + crate.getId())
             );
         }
-        plugin.getDatabaseManager().getCrateStatisticStorage().incrementCrateOpen(player.getUniqueId().toString(), crate.getId());
+        plugin.getDatabaseManager().getCrateStatisticStorage().incrementCrateOpen(player.getName(), crate.getId());
     }
 
 }

@@ -4,6 +4,7 @@ import com.monkey.ultimateCrates.UltimateCrates;
 import com.monkey.ultimateCrates.command.SubCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -24,12 +25,12 @@ public class VirtualKeysCommand implements SubCommand {
 
     @Override
     public String getDescription() {
-        return "Mostra tutte le chiavi virtuali di un giocatore";
+        return "Mostra o resetta le chiavi virtuali";
     }
 
     @Override
     public String getSyntax() {
-        return "/crate virtualkeys [player]";
+        return "/crate virtualkeys [player|reset <player>|resetall]";
     }
 
     @Override
@@ -39,6 +40,19 @@ public class VirtualKeysCommand implements SubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
+        if (args.length == 1 && args[0].equalsIgnoreCase("resetall")) {
+            plugin.getDatabaseManager().getVirtualKeyStorage().resetAllKeys();
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aTutte le chiavi virtuali sono state resettate."));
+            return;
+        }
+
+        if (args.length == 2 && args[0].equalsIgnoreCase("reset")) {
+            OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+            plugin.getDatabaseManager().getVirtualKeyStorage().resetKeys(target.getName());
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aChiavi virtuali resettate per &f" + target.getName()));
+            return;
+        }
+
         Player target;
 
         if (args.length >= 1) {
@@ -54,7 +68,7 @@ public class VirtualKeysCommand implements SubCommand {
             return;
         }
 
-        Map<String, Integer> allKeys = plugin.getDatabaseManager().getVirtualKeyStorage().getAllKeys(target.getUniqueId());
+        Map<String, Integer> allKeys = plugin.getDatabaseManager().getVirtualKeyStorage().getAllKeys(target.getName());
 
         if (allKeys.isEmpty()) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e" + target.getName() + " non ha chiavi virtuali."));
@@ -81,11 +95,23 @@ public class VirtualKeysCommand implements SubCommand {
     @Override
     public List<String> tabComplete(Player player, String[] args) {
         if (args.length == 1) {
-            return Bukkit.getOnlinePlayers().stream()
+            List<String> suggestions = new ArrayList<>();
+            suggestions.add("reset");
+            suggestions.add("resetall");
+            suggestions.addAll(Bukkit.getOnlinePlayers().stream()
                     .map(Player::getName)
                     .filter(name -> name.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .toList());
+            return suggestions;
+        }
+
+        if (args.length == 2 && args[0].equalsIgnoreCase("reset")) {
+            return Bukkit.getOnlinePlayers().stream()
+                    .map(Player::getName)
+                    .filter(name -> name.toLowerCase().startsWith(args[1].toLowerCase()))
                     .toList();
         }
+
         return Collections.emptyList();
     }
 }
