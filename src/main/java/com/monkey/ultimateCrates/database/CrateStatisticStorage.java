@@ -16,5 +16,7 @@ public interface CrateStatisticStorage {
 
     void resetAllStats();
 
+    boolean checkRewardAndReset(String playerName, String crateId, int rewardEvery);
+
     record LeaderboardEntry(String playerName, int amountOpened) {}
 }

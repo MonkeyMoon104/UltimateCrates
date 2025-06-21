@@ -1,6 +1,11 @@
 crates:
   common:
     name: "&aCommon Crate"
+    reward:
+      every: 5
+      prizeconf:
+        item: DIAMOND
+        amount: 30
     hologram:
       - "&a&lCommon Crate&r"
       - "&7Apri subito!"
@@ -26,6 +31,11 @@ crates:
 
   legendary:
     name: "&6Legendary Crate"
+    reward:
+      every: 10
+      prizeconf:
+        item: NETHERITE_INGOT
+        amount: 35
     hologram:
       - "&6&lLegendary Crate&r"
       - "&5Sei fortunato!"

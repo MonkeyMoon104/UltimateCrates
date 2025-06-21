@@ -104,7 +104,22 @@ public class CratesManager {
                 enchanted = keysSection.getBoolean("enchanted", false);
             }
 
-            Crate crate = new Crate(key, displayName, hologram, animations, prizes, particleEffectConfig, keyType, keyName, enchanted);
+            ConfigurationSection rewardSection = crateSection.getConfigurationSection("reward");
+            int rewardEvery = 0;
+            String rewardItem = null;
+            int rewardAmount = 0;
+
+            if (rewardSection != null) {
+                rewardEvery = rewardSection.getInt("every", 0);
+                ConfigurationSection prizeConf = rewardSection.getConfigurationSection("prizeconf");
+                if (prizeConf != null) {
+                    rewardItem = prizeConf.getString("item", null);
+                    rewardAmount = prizeConf.getInt("amount", 1);
+                }
+            }
+
+
+            Crate crate = new Crate(key, displayName, hologram, animations, prizes, particleEffectConfig, keyType, keyName, enchanted, rewardEvery, rewardItem, rewardAmount);
             crates.put(key, crate);
         }
 

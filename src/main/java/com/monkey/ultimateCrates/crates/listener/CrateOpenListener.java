@@ -116,6 +116,30 @@ public class CrateOpenListener implements Listener {
             );
         }
         plugin.getDatabaseManager().getCrateStatisticStorage().incrementCrateOpen(player.getName(), crate.getId());
+
+        int rewardEvery = crate.getRewardEvery();
+        if (rewardEvery > 0) {
+            boolean rewardGiven = plugin.getDatabaseManager().getCrateStatisticStorage()
+                    .checkRewardAndReset(player.getName(), crate.getId(), rewardEvery);
+
+            if (rewardGiven) {
+                ItemStack rewardItem = parseRewardPrize(crate.getRewardItem(), crate.getRewardAmount());
+                if (rewardItem != null) {
+                    player.getInventory().addItem(rewardItem);
+                    player.sendMessage(ChatColor.GOLD + "Hai ricevuto la ricompensa garantita per aver aperto " + rewardEvery + " crate " + crate.getDisplayName() + "!");
+                }
+            }
+        }
     }
+
+    private ItemStack parseRewardPrize(String materialName, int amount) {
+        if (materialName == null) return null;
+
+        Material material = Material.getMaterial(materialName.toUpperCase());
+        if (material == null) return null;
+
+        return new ItemStack(material, amount);
+    }
+
 
 }

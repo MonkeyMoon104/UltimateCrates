@@ -27,6 +27,7 @@ public class MySQLCrateStatisticStorage implements CrateStatisticStorage {
                     "player_name VARCHAR(32) NOT NULL, " +
                     "crate_id VARCHAR(64) NOT NULL, " +
                     "amount_opened INT NOT NULL DEFAULT 0, " +
+                    "reward_counter INT NOT NULL DEFAULT 0, " +
                     "PRIMARY KEY (player_name, crate_id));");
         } catch (SQLException e) {
             logger.severe("Errore nella creazione della tabella crate_stats (MySQL): " + e.getMessage());
@@ -86,6 +87,45 @@ public class MySQLCrateStatisticStorage implements CrateStatisticStorage {
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Errore resettando tutte le stats MySQL", e);
         }
+    }
+
+    @Override
+    public boolean checkRewardAndReset(String playerName, String crateId, int rewardEvery) {
+        try (PreparedStatement stmtInsertOrUpdate = connection.prepareStatement(
+                "INSERT INTO crate_stats (player_name, crate_id, amount_opened, reward_counter) " +
+                        "VALUES (?, ?, 0, 1) " +
+                        "ON DUPLICATE KEY UPDATE reward_counter = reward_counter + 1"
+        )) {
+            stmtInsertOrUpdate.setString(1, playerName);
+            stmtInsertOrUpdate.setString(2, crateId);
+            stmtInsertOrUpdate.executeUpdate();
+
+            try (PreparedStatement stmtSelect = connection.prepareStatement(
+                    "SELECT reward_counter FROM crate_stats WHERE player_name = ? AND crate_id = ?"
+            )) {
+                stmtSelect.setString(1, playerName);
+                stmtSelect.setString(2, crateId);
+
+                try (ResultSet rs = stmtSelect.executeQuery()) {
+                    if (rs.next()) {
+                        int count = rs.getInt("reward_counter");
+                        if (count >= rewardEvery) {
+                            try (PreparedStatement stmtReset = connection.prepareStatement(
+                                    "UPDATE crate_stats SET reward_counter = 0 WHERE player_name = ? AND crate_id = ?"
+                            )) {
+                                stmtReset.setString(1, playerName);
+                                stmtReset.setString(2, crateId);
+                                stmtReset.executeUpdate();
+                            }
+                            return true;
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.warning("Errore in checkRewardAndReset (MySQL): " + e.getMessage());
+        }
+        return false;
     }
 
     @Override

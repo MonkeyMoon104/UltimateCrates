@@ -20,7 +20,11 @@ public class Crate {
     private final String keyName;
     private final boolean enchanted;
 
-    public Crate(String id, String displayName, List<String> hologramLines, List<String> animationTemplates, List<ItemStack> prizes, ParticleEffectConfig particleEffectConfig, KeyType keyType, String keyName, boolean enchanted) {
+    private final int rewardEvery;
+    private final String rewardItem;
+    private final int rewardAmount;
+
+    public Crate(String id, String displayName, List<String> hologramLines, List<String> animationTemplates, List<ItemStack> prizes, ParticleEffectConfig particleEffectConfig, KeyType keyType, String keyName, boolean enchanted, int rewardEvery, String rewardItem, int rewardAmount) {
         this.id = id;
         this.displayName = displayName;
         this.hologramLines = hologramLines;
@@ -30,6 +34,9 @@ public class Crate {
         this.keyType = keyType;
         this.keyName = keyName;
         this.enchanted = enchanted;
+        this.rewardEvery = rewardEvery;
+        this.rewardItem = rewardItem;
+        this.rewardAmount = rewardAmount;
     }
 
     public String getId() {
@@ -65,5 +72,17 @@ public class Crate {
 
     public boolean isEnchanted() {
         return enchanted;
+    }
+
+    public int getRewardEvery() {
+        return rewardEvery;
+    }
+
+    public String getRewardItem() {
+        return rewardItem;
+    }
+
+    public int getRewardAmount() {
+        return rewardAmount;
     }
 }
