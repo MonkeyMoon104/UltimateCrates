@@ -87,13 +87,13 @@ public class ParticlesManager {
         }, 40L);
     }
 
-    public void spawnFixedEffectAt(Location location, String effectName, String styleName) {
+    public Integer spawnFixedEffectAt(Location location, String effectName, String styleName) {
         ParticleEffect effect = this.particleEffects.get(effectName.toLowerCase());
         ParticleStyle style = this.particleStyles.get(styleName.toLowerCase());
 
         if (effect == null || style == null) {
             plugin.getLogger().warning("Effetto o stile particellare non valido: " + effectName + ", " + styleName);
-            return;
+            return null;
         }
 
         Location center = location.clone().add(0.5, 1.0, 0.5);
@@ -102,7 +102,7 @@ public class ParticlesManager {
 
         if (created == null) {
             plugin.getLogger().warning("Impossibile creare effetto particellare alla posizione " + location);
-            return;
+            return null;
         }
 
         activeEffects.put(location, created);
@@ -113,6 +113,8 @@ public class ParticlesManager {
         } catch (SQLException ex) {
             plugin.getLogger().severe("Errore nel salvataggio effetto particellare nel DB: " + ex.getMessage());
         }
+
+        return created.getId();
     }
 
     public void removeEffectAt(Location location) {
@@ -130,7 +132,4 @@ public class ParticlesManager {
             UltimateCrates.getInstance().getLogger().severe("Errore rimozione effetto particellare dal DB: " + ex.getMessage());
         }
     }
-
-
-
 }

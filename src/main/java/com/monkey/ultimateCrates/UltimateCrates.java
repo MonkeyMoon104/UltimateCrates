@@ -226,11 +226,32 @@ public final class UltimateCrates extends JavaPlugin {
 
                 if (config == null || !config.isEnabled()) {
                     getParticlesManager().removeEffectAt(location);
-
                     try {
                         getDatabaseCrates().removeFixedParticle(location);
                     } catch (SQLException ex) {
                         getLogger().severe("Errore nella rimozione dell'effetto disabilitato da DB: " + ex.getMessage());
+                    }
+                    continue;
+                }
+
+                Integer effectId = getDatabaseCrates().getFixedEffectIdAt(location);
+                String savedEffectType = getDatabaseCrates().getFixedEffectTypeAt(location);
+                String savedEffectStyle = getDatabaseCrates().getFixedEffectStyleAt(location);
+
+                boolean needsUpdate = effectId == null
+                        || !config.getType().equalsIgnoreCase(savedEffectType)
+                        || !config.getEffect().equalsIgnoreCase(savedEffectStyle);
+
+                if (needsUpdate) {
+                    if (effectId != null) {
+                        getParticlesManager().removeEffectAt(location);
+                    }
+
+                    try {
+                        int spawnedId = getParticlesManager().spawnFixedEffectAt(location, config.getType(), config.getEffect());
+                        getDatabaseCrates().saveFixedParticle(location, config.getType(), config.getEffect(), spawnedId);
+                    } catch (Exception ex) {
+                        getLogger().severe("Errore nella riapplicazione dell'effetto: " + ex.getMessage());
                     }
                 }
             }

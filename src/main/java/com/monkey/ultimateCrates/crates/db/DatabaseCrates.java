@@ -171,6 +171,41 @@ public class DatabaseCrates {
         }
     }
 
+    public String getFixedEffectTypeAt(Location loc) throws SQLException {
+        String sql = "SELECT particle_name FROM fixed_particles WHERE world = ? AND x = ? AND y = ? AND z = ?;";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, loc.getWorld().getName());
+            ps.setInt(2, loc.getBlockX());
+            ps.setInt(3, loc.getBlockY());
+            ps.setInt(4, loc.getBlockZ());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("particle_name");
+                }
+                return null;
+            }
+        }
+    }
+
+    public String getFixedEffectStyleAt(Location loc) throws SQLException {
+        String sql = "SELECT style FROM fixed_particles WHERE world = ? AND x = ? AND y = ? AND z = ?;";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, loc.getWorld().getName());
+            ps.setInt(2, loc.getBlockX());
+            ps.setInt(3, loc.getBlockY());
+            ps.setInt(4, loc.getBlockZ());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("style");
+                }
+                return null;
+            }
+        }
+    }
+
+
     public void closeConnection() throws SQLException {
         if (connection != null && !connection.isClosed()) {
             connection.close();
