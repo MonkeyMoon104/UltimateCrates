@@ -14,6 +14,7 @@ import com.monkey.ultimateCrates.crates.model.Crate;
 import com.monkey.ultimateCrates.crates.model.ParticleEffectConfig;
 import com.monkey.ultimateCrates.crates.particles.ParticlesManager;
 import com.monkey.ultimateCrates.database.DatabaseManager;
+import com.monkey.ultimateCrates.placeholder.UCPlaceholder;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -56,6 +57,7 @@ public final class UltimateCrates extends JavaPlugin {
         registerCommands();
         registerAnimations();
         registerListeners();
+        registerExpansions();
 
         try {
             databaseCrates.openConnection();
@@ -115,6 +117,10 @@ public final class UltimateCrates extends JavaPlugin {
         animationManager.registerAnimation(new PortalSwirlAnimation());
         animationManager.registerAnimation(new BubbleUpAnimation());
 
+    }
+
+    private void registerExpansions() {
+        new UCPlaceholder(this).register();
     }
 
     public AnimationManager getAnimationManager() {

@@ -13,9 +13,8 @@ public class DatabaseManager {
 
     private final DatabaseConfig databaseConfig;
     private Connection connection;
-
-    private CrateOpenStorage crateOpenStorage;
     private VirtualKeyStorage virtualKeyStorage;
+    private CrateStatisticStorage crateStatisticStorage;
 
     public DatabaseManager(UltimateCrates plugin) {
         this.plugin = plugin;
@@ -33,15 +32,15 @@ public class DatabaseManager {
         String dbType = plugin.getConfig().getString("db_virtual.type", "sqlite").toLowerCase();
 
         if (dbType.equals("mysql")) {
-            crateOpenStorage = new MySQLCrateOpenStorage(connection, logger);
             virtualKeyStorage = new MySQLVirtualKeyStorage(connection, logger);
+            crateStatisticStorage = new MySQLCrateStatisticStorage(connection, logger);
         } else {
-            crateOpenStorage = new SQLiteCrateOpenStorage(connection);
             virtualKeyStorage = new SQLiteVirtualKeyStorage(connection, logger);
+            crateStatisticStorage = new SQLiteCrateStatisticStorage(connection, logger);
         }
 
-        crateOpenStorage.createTable();
         virtualKeyStorage.createTable();
+        crateStatisticStorage.createTable();
 
         logger.info("Database " + dbType.toUpperCase() + " inizializzato correttamente.");
     }
@@ -50,15 +49,15 @@ public class DatabaseManager {
         return connection;
     }
 
-    public CrateOpenStorage getCrateOpenStorage() {
-        return crateOpenStorage;
-    }
-
     public VirtualKeyStorage getVirtualKeyStorage() {
         return virtualKeyStorage;
     }
 
     public void close() {
         databaseConfig.close();
+    }
+
+    public CrateStatisticStorage getCrateStatisticStorage() {
+        return crateStatisticStorage;
     }
 }

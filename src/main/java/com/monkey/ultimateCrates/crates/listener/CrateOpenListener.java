@@ -115,6 +115,7 @@ public class CrateOpenListener implements Listener {
                     () -> plugin.getLogger().warning("Animazione non trovata: " + animationName + " nella crate: " + crate.getId())
             );
         }
+        plugin.getDatabaseManager().getCrateStatisticStorage().incrementCrateOpen(player.getUniqueId().toString(), crate.getId());
     }
 
 }
