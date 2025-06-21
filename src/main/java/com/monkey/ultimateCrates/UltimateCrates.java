@@ -11,6 +11,7 @@ import com.monkey.ultimateCrates.crates.listener.CrateOpenListener;
 import com.monkey.ultimateCrates.crates.listener.CratePlaceListener;
 import com.monkey.ultimateCrates.crates.listener.CratePreviewListener;
 import com.monkey.ultimateCrates.crates.model.Crate;
+import com.monkey.ultimateCrates.crates.model.ParticleEffectConfig;
 import com.monkey.ultimateCrates.crates.particles.ParticlesManager;
 import com.monkey.ultimateCrates.database.DatabaseManager;
 import org.bukkit.Location;
@@ -72,6 +73,8 @@ public final class UltimateCrates extends JavaPlugin {
             e.printStackTrace();
             getLogger().severe("Errore caricando crate dal DB!");
         }
+
+        synchronizePlacedCratesEffects();
 
         getLogger().info("UltimateCrates enabled!");
     }
@@ -173,6 +176,67 @@ public final class UltimateCrates extends JavaPlugin {
         }
 
         cratePlaceListener.registerHologram(loc, stands);
+    }
+
+    public void reload() {
+        cratePlaceListener.getHolograms().values().forEach(list -> list.forEach(ArmorStand::remove));
+        cratePlaceListener.getHolograms().clear();
+
+        configManager.reloadConfigs();
+
+        crateManager.loadCrates();
+
+        synchronizePlacedCratesEffects();
+
+        animationManager.clear();
+        registerAnimations();
+
+        if (databaseManager != null) {
+            databaseManager.close();
+        }
+        databaseManager.setup();
+
+        try {
+            databaseCrates.openConnection();
+            Map<Location, String> loadedCrates = databaseCrates.loadAllPlacedCrates();
+            for (Map.Entry<Location, String> entry : loadedCrates.entrySet()) {
+                spawnHologramAt(entry.getKey(), entry.getValue());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            getLogger().severe("Errore durante il reload del database crate!");
+        }
+
+        getLogger().info("UltimateCrates ricaricato con successo.");
+    }
+
+    public void synchronizePlacedCratesEffects() {
+        try {
+            Map<Location, String> placedCrates = getDatabaseCrates().loadAllPlacedCrates();
+
+            for (Map.Entry<Location, String> entry : placedCrates.entrySet()) {
+                Location location = entry.getKey();
+                String crateId = entry.getValue();
+
+                Optional<Crate> optionalCrate = getCrateManager().getCrate(crateId);
+                if (optionalCrate.isEmpty()) continue;
+
+                Crate crate = optionalCrate.get();
+                ParticleEffectConfig config = crate.getParticleEffectConfig();
+
+                if (config == null || !config.isEnabled()) {
+                    getParticlesManager().removeEffectAt(location);
+
+                    try {
+                        getDatabaseCrates().removeFixedParticle(location);
+                    } catch (SQLException ex) {
+                        getLogger().severe("Errore nella rimozione dell'effetto disabilitato da DB: " + ex.getMessage());
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            getLogger().severe("Errore durante la sincronizzazione delle particelle: " + ex.getMessage());
+        }
     }
 
 }

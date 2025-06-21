@@ -2,11 +2,11 @@ crates:
   common:
     name: "&aCommon Crate"
     hologram:
-      - "&7Apri questa crate per ottenere premi!"
+      - "&a&lCommon Crate&r"
+      - "&7Apri subito!"
       - "&ePremi fortunati ti aspettano!"
     animations:
-      - "sparkle"
-      - "circle"
+      - "spiral"
     particle_effect:
       enabled: true
       effect: "heart"
@@ -27,11 +27,11 @@ crates:
   legendary:
     name: "&6Legendary Crate"
     hologram:
+      - "&6&lLegendary Crate&r"
       - "&5Sei fortunato!"
       - "&dQuesta crate contiene premi epici!"
     animations:
       - "fireworks"
-      - "spiral"
     particle_effect:
       enabled: true
       effect: "totem_of_undying"

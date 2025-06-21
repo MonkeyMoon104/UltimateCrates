@@ -46,34 +46,75 @@ public class CrateOpenListener implements Listener {
         Crate crate = crateOpt.get();
         ItemStack handItem = player.getInventory().getItemInMainHand();
 
-        if (handItem == null || handItem.getType() == Material.AIR) {
-            switch (crate.getKeyType()) {
-                case PHYSIC -> {
-                    player.sendMessage(ChatColor.RED + "Questa crate accetta solo chiavi fisiche.");
-                }
-                case VIRTUAL -> {
-                    VirtualKeyStorage storage = plugin.getDatabaseManager().getVirtualKeyStorage();
-                    int keys = storage.getKeys(player.getUniqueId(), crate.getId());
-                    if (keys < 1) {
-                        player.sendMessage(ChatColor.RED + "Non hai abbastanza chiavi virtuali per aprire questa crate.");
-                        return;
-                    }
-
-                    storage.takeKeys(player.getUniqueId(), crate.getId(), 1);
-
-                    crateWinPrize(player, crate);
-                }
+        if (crate.getKeyType() == Crate.KeyType.PHYSIC) {
+            if (handItem == null || handItem.getType() == Material.AIR) {
+                player.sendMessage(ChatColor.RED + "Questa crate accetta solo chiavi fisiche. Devi avere una chiave fisica in mano.");
+                return;
             }
-            return;
-        }
 
-        NBTItem nbtItem = new NBTItem(handItem);
-        if (!nbtItem.hasTag("crate_key")) {
-            player.sendMessage(ChatColor.RED + "Non puoi aprire questa crate senza una crate key.");
+            NBTItem nbtItem = new NBTItem(handItem);
+            if (!nbtItem.hasTag("crate_key")) {
+                player.sendMessage(ChatColor.RED + "Non puoi aprire questa crate senza una crate key fisica.");
+                return;
+            }
+
+            String keyCrateId = nbtItem.getString("crate_key");
+            if (!keyCrateId.equalsIgnoreCase(crate.getId())) {
+                player.sendMessage(ChatColor.RED + "Questa chiave non appartiene a questa crate.");
+                return;
+            }
+
+            if (handItem.getAmount() > 1) {
+                handItem.setAmount(handItem.getAmount() - 1);
+            } else {
+                player.getInventory().setItemInMainHand(null);
+            }
+
+            crateWinPrize(player, crate);
+            return;
+        } else if (crate.getKeyType() == Crate.KeyType.VIRTUAL) {
+            if (handItem != null && handItem.getType() != Material.AIR) {
+                player.sendMessage(ChatColor.RED + "Questa crate accetta solo chiavi virtuali. Non devi avere oggetti in mano.");
+                return;
+            }
+
+            VirtualKeyStorage storage = plugin.getDatabaseManager().getVirtualKeyStorage();
+            int keys = storage.getKeys(player.getUniqueId(), crate.getId());
+            if (keys < 1) {
+                player.sendMessage(ChatColor.RED + "Non hai abbastanza chiavi virtuali per aprire questa crate.");
+                return;
+            }
+
+            storage.takeKeys(player.getUniqueId(), crate.getId(), 1);
+            crateWinPrize(player, crate);
+            return;
         }
     }
 
     private void crateWinPrize(Player player, Crate crate) {
-        player.sendMessage(ChatColor.GREEN + "Hai aperto la crate virtuale: " + crate.getDisplayName());
+        var prizes = crate.getPrizes();
+        if (prizes.isEmpty()) {
+            player.sendMessage(ChatColor.RED + "Questa crate non contiene premi.");
+            return;
+        }
+
+        ItemStack prize = prizes.get((int) (Math.random() * prizes.size()));
+        player.getInventory().addItem(prize);
+
+        String prizeName = prize.getItemMeta() != null && prize.getItemMeta().hasDisplayName()
+                ? prize.getItemMeta().getDisplayName()
+                : ChatColor.YELLOW + prize.getType().toString();
+        player.sendMessage(ChatColor.GOLD + "Hai vinto: " + prizeName);
+
+        var animationManager = plugin.getAnimationManager();
+        var location = player.getLocation();
+
+        for (String animationName : crate.getAnimationTemplates()) {
+            animationManager.getAnimation(animationName).ifPresentOrElse(
+                    animation -> animation.play(player, location),
+                    () -> plugin.getLogger().warning("Animazione non trovata: " + animationName + " nella crate: " + crate.getId())
+            );
+        }
     }
+
 }

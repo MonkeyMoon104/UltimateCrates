@@ -18,6 +18,7 @@ public class CommandManager {
         register(new VirtualKeysCommand(UltimateCrates.getInstance()));
         register(new GiveCommand());
         register(new StatsCommand());
+        register(new ReloadCommand(UltimateCrates.getInstance()));
     }
 
     private void register(SubCommand command) {

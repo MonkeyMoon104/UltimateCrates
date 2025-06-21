@@ -21,6 +21,11 @@ public class AnimationManager {
         plugin.getLogger().info("Registrata animazione: " + animation.getName());
     }
 
+    public void clear() {
+        animations.clear();
+        plugin.getLogger().info("Animations rimosse");
+    }
+
     public Optional<CrateAnimation> getAnimation(String name) {
         return Optional.ofNullable(animations.get(name.toLowerCase()));
     }

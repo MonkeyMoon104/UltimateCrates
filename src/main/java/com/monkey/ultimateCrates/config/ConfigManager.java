@@ -29,6 +29,13 @@ public class ConfigManager {
         cratesConfig = YamlConfiguration.loadConfiguration(cratesFile);
     }
 
+    public void reloadConfigs() {
+        plugin.reloadConfig();
+        mainConfig = plugin.getConfig();
+
+        cratesConfig = YamlConfiguration.loadConfiguration(cratesFile);
+    }
+
     public FileConfiguration getMainConfig() {
         return mainConfig;
     }
@@ -45,5 +52,9 @@ public class ConfigManager {
             e.printStackTrace();
         }
     }
-}
 
+    public void saveAllConfigs() {
+        plugin.saveConfig();
+        saveCratesConfig();
+    }
+}

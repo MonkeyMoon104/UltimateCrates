@@ -40,14 +40,12 @@ public class CratesManager {
             ConfigurationSection particleSection = crateSection.getConfigurationSection("particle_effect");
             if (particleSection != null) {
                 boolean enabled = particleSection.getBoolean("enabled", false);
-                String color = particleSection.getString("color", "WHITE");
-                double size = particleSection.getDouble("size", 1.0);
-                String type = particleSection.getString("effect", "SPELL_MOB");
-                String effect = particleSection.getString("style", "sparkle");
+                String type = particleSection.getString("effect", "heart");
+                String effect = particleSection.getString("style", "sphere");
 
-                particleEffectConfig = new ParticleEffectConfig(enabled, color, size, type, effect);
+                particleEffectConfig = new ParticleEffectConfig(enabled, type, effect);
             } else {
-                particleEffectConfig = new ParticleEffectConfig(false, "WHITE", 1.0, "SPELL_MOB", "sparkle");
+                particleEffectConfig = new ParticleEffectConfig(false, "heart", "sphere");
             }
 
             List<ItemStack> prizes = new ArrayList<>();

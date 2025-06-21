@@ -54,16 +54,27 @@ public class VirtualKeysCommand implements SubCommand {
             return;
         }
 
-        Map<String, Integer> keys = plugin.getDatabaseManager().getVirtualKeyStorage().getAllKeys(target.getUniqueId());
+        Map<String, Integer> allKeys = plugin.getDatabaseManager().getVirtualKeyStorage().getAllKeys(target.getUniqueId());
 
-        if (keys.isEmpty()) {
+        if (allKeys.isEmpty()) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e" + target.getName() + " non ha chiavi virtuali."));
             return;
         }
 
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aChiavi virtuali di &f" + target.getName() + "&a:"));
-        for (Map.Entry<String, Integer> entry : keys.entrySet()) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', " &7- &e" + entry.getKey() + "&7: &b" + entry.getValue()));
+
+        boolean found = false;
+        for (Map.Entry<String, Integer> entry : allKeys.entrySet()) {
+            Optional<com.monkey.ultimateCrates.crates.model.Crate> crateOpt = plugin.getCrateManager().getCrate(entry.getKey());
+
+            if (crateOpt.isPresent() && crateOpt.get().getKeyType() == com.monkey.ultimateCrates.crates.model.Crate.KeyType.VIRTUAL) {
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', " &7- &e" + entry.getKey() + "&7: &b" + entry.getValue()));
+                found = true;
+            }
+        }
+
+        if (!found) {
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7(Tutte le chiavi salvate appartengono a crate fisiche.)"));
         }
     }
 
