@@ -1,0 +1,7 @@
+db_virtual:
+  type: "sqlite"   # Scegli "sqlite" o "mysql"
+  host: "localhost"
+  port: 3306
+  database: "ultimatecrates"
+  username: "root"
+  password: "password"

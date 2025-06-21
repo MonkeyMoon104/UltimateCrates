@@ -1,44 +1,49 @@
 package com.monkey.ultimateCrates.database;
 
 import com.monkey.ultimateCrates.UltimateCrates;
-import com.monkey.ultimateCrates.database.impl.CrateOpenStorage;
-import com.monkey.ultimateCrates.database.impl.SQLiteCrateOpenStorage;
-import com.monkey.ultimateCrates.database.impl.SQLiteVirtualKeyStorage;
-import com.monkey.ultimateCrates.database.impl.VirtualKeyStorage;
+import com.monkey.ultimateCrates.database.impl.*;
 
-import java.io.File;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DatabaseManager {
 
     private final UltimateCrates plugin;
+    private final Logger logger;
+
+    private final DatabaseConfig databaseConfig;
     private Connection connection;
+
     private CrateOpenStorage crateOpenStorage;
     private VirtualKeyStorage virtualKeyStorage;
 
     public DatabaseManager(UltimateCrates plugin) {
         this.plugin = plugin;
+        this.logger = plugin.getLogger();
+        this.databaseConfig = new DatabaseConfig(plugin);
     }
 
     public void setup() {
-        try {
-            File dbFile = new File(plugin.getDataFolder(), "data.db");
-            String url = "jdbc:sqlite:" + dbFile.getAbsolutePath();
-            connection = DriverManager.getConnection(url);
-
-            crateOpenStorage = new SQLiteCrateOpenStorage(connection);
-            crateOpenStorage.createTable();
-
-            virtualKeyStorage = new SQLiteVirtualKeyStorage(connection, plugin.getLogger());
-            virtualKeyStorage.createTable();
-
-            plugin.getLogger().info("Database SQLite caricato correttamente.");
-        } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Errore nella connessione al database SQLite: ", e);
+        connection = databaseConfig.connect();
+        if (connection == null) {
+            logger.severe("Impossibile stabilire connessione al database");
+            return;
         }
+
+        String dbType = plugin.getConfig().getString("db_virtual.type", "sqlite").toLowerCase();
+
+        if (dbType.equals("mysql")) {
+            crateOpenStorage = new MySQLCrateOpenStorage(connection, logger);
+            virtualKeyStorage = new MySQLVirtualKeyStorage(connection, logger);
+        } else {
+            crateOpenStorage = new SQLiteCrateOpenStorage(connection);
+            virtualKeyStorage = new SQLiteVirtualKeyStorage(connection, logger);
+        }
+
+        crateOpenStorage.createTable();
+        virtualKeyStorage.createTable();
+
+        logger.info("Database " + dbType.toUpperCase() + " inizializzato correttamente.");
     }
 
     public Connection getConnection() {
@@ -54,13 +59,6 @@ public class DatabaseManager {
     }
 
     public void close() {
-        if (connection != null) {
-            try {
-                connection.close();
-                plugin.getLogger().info("Connessione SQLite chiusa.");
-            } catch (SQLException e) {
-                plugin.getLogger().warning("Errore chiusura database: " + e.getMessage());
-            }
-        }
+        databaseConfig.close();
     }
 }
