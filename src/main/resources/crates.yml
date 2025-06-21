@@ -1,0 +1,51 @@
+crates:
+  common:
+    name: "&aCommon Crate"
+    hologram:
+      - "&7Apri questa crate per ottenere premi!"
+      - "&ePremi fortunati ti aspettano!"
+    animations:
+      - "sparkle"
+      - "circle"
+    particle_effect:
+      enabled: true
+      effect: "heart"
+      style: "sphere"
+    keys:
+      type: physic
+      name: "&aCommon Crate Key"
+      enchanted: true
+    prizes:
+      - type: DIAMOND
+        amount: 3
+        name: "&bDiamante Brillante"
+        lore:
+          - "&7Un prezioso diamante"
+      - type: GOLD_INGOT
+        amount: 5
+
+  legendary:
+    name: "&6Legendary Crate"
+    hologram:
+      - "&5Sei fortunato!"
+      - "&dQuesta crate contiene premi epici!"
+    animations:
+      - "fireworks"
+      - "spiral"
+    particle_effect:
+      enabled: true
+      effect: "totem_of_undying"
+      style: "batman"
+    keys:
+      type: virtual
+      enchanted: false
+      name: "&6Legendary Crate Key"
+    prizes:
+      - type: NETHERITE_SWORD
+        amount: 1
+        name: "&cSpada Leggendaria"
+        lore:
+          - "&7Potere immenso"
+          - "&eMolto rara"
+      - type: EMERALD
+        amount: 10

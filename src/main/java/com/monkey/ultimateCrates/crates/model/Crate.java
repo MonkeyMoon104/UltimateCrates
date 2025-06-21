@@ -1,0 +1,69 @@
+package com.monkey.ultimateCrates.crates.model;
+
+import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
+
+public class Crate {
+    public enum KeyType {
+        VIRTUAL, PHYSIC
+    }
+
+    private final String id;
+    private final String displayName;
+    private final List<String> hologramLines;
+    private final List<String> animationTemplates;
+    private final List<ItemStack> prizes;
+    private final ParticleEffectConfig particleEffectConfig;
+
+    private final KeyType keyType;
+    private final String keyName;
+    private final boolean enchanted;
+
+    public Crate(String id, String displayName, List<String> hologramLines, List<String> animationTemplates, List<ItemStack> prizes, ParticleEffectConfig particleEffectConfig, KeyType keyType, String keyName, boolean enchanted) {
+        this.id = id;
+        this.displayName = displayName;
+        this.hologramLines = hologramLines;
+        this.animationTemplates = animationTemplates;
+        this.prizes = prizes;
+        this.particleEffectConfig = particleEffectConfig;
+        this.keyType = keyType;
+        this.keyName = keyName;
+        this.enchanted = enchanted;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public List<String> getHologramLines() {
+        return hologramLines;
+    }
+
+    public List<String> getAnimationTemplates() {
+        return animationTemplates;
+    }
+
+    public List<ItemStack> getPrizes() {
+        return prizes;
+    }
+
+    public ParticleEffectConfig getParticleEffectConfig() {
+        return particleEffectConfig;
+    }
+    public KeyType getKeyType() {
+        return keyType;
+    }
+
+    public String getKeyName() {
+        return keyName;
+    }
+
+    public boolean isEnchanted() {
+        return enchanted;
+    }
+}

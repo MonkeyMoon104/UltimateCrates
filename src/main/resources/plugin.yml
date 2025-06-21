@@ -1,0 +1,16 @@
+name: UltimateCrates
+version: '1.0.0'
+main: com.monkey.ultimateCrates.UltimateCrates
+api-version: '1.21'
+authors: [ MonkeyMoon104 ]
+description: Plugin crates
+depend:
+  - NBTAPI
+  - PlayerParticles
+
+commands:
+  crate:
+    description: Comando principale per le Crates
+    usage: /crate
+    aliases: [cr]
+
