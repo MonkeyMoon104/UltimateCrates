@@ -39,14 +39,31 @@ public class VirtualKeysCommand implements SubCommand {
     }
 
     @Override
+    public String getPermission() {
+        return "uc.vkeys.use";
+    }
+
+    public String getResetPermission() {
+        return "uc.admin.vkeys.reset";
+    }
+
+    @Override
     public void execute(CommandSender sender, String[] args) {
         if (args.length == 1 && args[0].equalsIgnoreCase("resetall")) {
+            if (!sender.hasPermission(getResetPermission())) {
+                sender.sendMessage(plugin.getMessagesManager().getMessage("messages.command.no_permission"));
+                return;
+            }
             plugin.getDatabaseManager().getVirtualKeyStorage().resetAllKeys();
             sender.sendMessage(plugin.getMessagesManager().getMessage("messages.virtualkeys.reset_all"));
             return;
         }
 
         if (args.length == 2 && args[0].equalsIgnoreCase("reset")) {
+            if (!sender.hasPermission(getResetPermission())) {
+                sender.sendMessage(plugin.getMessagesManager().getMessage("messages.command.no_permission"));
+                return;
+            }
             OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
             plugin.getDatabaseManager().getVirtualKeyStorage().resetKeys(target.getName());
             sender.sendMessage(plugin.getMessagesManager().getMessage("messages.virtualkeys.reset_player")

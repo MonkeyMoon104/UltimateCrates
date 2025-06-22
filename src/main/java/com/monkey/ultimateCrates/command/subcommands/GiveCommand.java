@@ -37,6 +37,11 @@ public class GiveCommand implements SubCommand {
     }
 
     @Override
+    public String getPermission() {
+        return "uc.admin.give";
+    }
+
+    @Override
     public void execute(CommandSender sender, String[] args) {
         UltimateCrates plugin = UltimateCrates.getInstance();
 

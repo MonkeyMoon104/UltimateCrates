@@ -31,6 +31,14 @@ public class CratePlaceListener implements Listener {
     @EventHandler
     public void onCratePlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
+
+        if (!player.hasPermission("uc.admin.crate.place")) {
+            event.setCancelled(true);
+            String message = plugin.getMessagesManager().getMessage("messages.command.no_permission");
+            player.sendMessage(message);
+            return;
+        }
+
         ItemStack item = event.getItemInHand();
         NBTItem nbtItem = new NBTItem(item);
 

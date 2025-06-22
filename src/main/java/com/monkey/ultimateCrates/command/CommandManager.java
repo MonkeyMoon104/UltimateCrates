@@ -42,6 +42,12 @@ public class CommandManager {
             return true;
         }
 
+        if (!sender.hasPermission(cmd.getPermission())) {
+            sender.sendMessage(plugin.getMessagesManager().getMessage("messages.command.no_permission"));
+            return true;
+        }
+
+
         cmd.execute(sender, Arrays.copyOfRange(args, 1, args.length));
         return true;
     }

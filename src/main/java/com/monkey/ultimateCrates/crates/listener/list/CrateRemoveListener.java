@@ -31,6 +31,13 @@ public class CrateRemoveListener implements Listener {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if (!event.getPlayer().isSneaking()) return;
 
+        if (!event.getPlayer().hasPermission("uc.admin.break")) {
+            event.setCancelled(true);
+            String message = plugin.getMessagesManager().getMessage("messages.command.no_permission");
+            event.getPlayer().sendMessage(message);
+            return;
+        }
+
         Location blockLoc = event.getClickedBlock().getLocation();
         if (!hologramManager.containsHologram(blockLoc)) return;
 

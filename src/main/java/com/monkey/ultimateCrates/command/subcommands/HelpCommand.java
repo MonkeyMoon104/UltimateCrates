@@ -36,6 +36,11 @@ public class HelpCommand implements SubCommand {
     }
 
     @Override
+    public String getPermission() {
+        return "uc.help.use";
+    }
+
+    @Override
     public void execute(CommandSender sender, String[] args) {
         sender.sendMessage(plugin.getMessagesManager().getMessage("messages.help.header"));
         sender.sendMessage(plugin.getMessagesManager().getMessage("messages.help.command_givekey"));

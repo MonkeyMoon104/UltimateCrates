@@ -34,6 +34,11 @@ public class CratePreviewInteractListener implements Listener {
         if (event.getClickedBlock() == null) return;
 
         Player player = event.getPlayer();
+        if (!player.hasPermission("uc.preview.see")) {
+            String message = plugin.getMessagesManager().getMessage("messages.command.no_permission");
+            player.sendMessage(message);
+            return;
+        }
         NBTBlock nbtBlock = new NBTBlock(event.getClickedBlock());
 
         if (!nbtBlock.getData().hasTag("crate_id")) return;

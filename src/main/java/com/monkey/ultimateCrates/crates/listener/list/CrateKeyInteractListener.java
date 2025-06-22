@@ -3,6 +3,7 @@ package com.monkey.ultimateCrates.crates.listener.list;
 import com.monkey.ultimateCrates.UltimateCrates;
 import com.monkey.ultimateCrates.crates.listener.helper.validators.CrateBlockValidator;
 import com.monkey.ultimateCrates.crates.listener.helper.validators.CrateKeyValidator;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -33,7 +34,7 @@ public class CrateKeyInteractListener implements Listener {
         if (action == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null) {
             if (!crateBlockValidator.isCrateBlock(event, true)) {
                 event.setCancelled(true);
-                event.setUseItemInHand(org.bukkit.event.Event.Result.DENY);
+                event.setUseItemInHand(Event.Result.DENY);
             }
         }
 

@@ -8,10 +8,58 @@ depend:
   - NBTAPI
   - PlayerParticles
   - PlaceholderAPI
+  - LuckPerms
 
 commands:
   crate:
     description: Comando principale per le Crates
     usage: /crate
     aliases: [cr]
+
+permissions:
+  uc.admin:
+    description: Permessi amministrativi di UltimateCrates
+    default: op
+    children:
+      uc.admin.give:
+        description: Permette di dare crates
+        default: op
+      uc.admin.givekey:
+        description: Permette di dare chiavi fisiche e virtuali
+        default: op
+      uc.admin.reload:
+        description: Permette di ricaricare il plugin
+        default: op
+      uc.admin.stats.reset:
+        description: Permette di resettare le statistiche
+        default: op
+      uc.admin.vkeys.reset:
+        description: Permette di resettare le chiavi virtuali di un giocatore o tutte
+        default: op
+      uc.admin.break:
+        description: Permette di rompere le crate
+        default: op
+      uc.admin.crate.place:
+        description: Permette di piazzare le crate
+        default: op
+
+  uc.user:
+    description: Permessi utente di UltimateCrates
+    default: true
+    children:
+      uc.help.use:
+        description: Permette di usare il comando help
+        default: true
+      uc.stats.use:
+        description: Permette di vedere le statistiche
+        default: true
+      uc.vkeys.use:
+        description: Permette di vedere e usare le chiavi virtuali
+        default: true
+      uc.crate.open:
+        description: Permette di aprire le casse
+        default: true
+      uc.preview.see:
+        description: Permette di vedere l'anteprima delle casse
+        default: true
 

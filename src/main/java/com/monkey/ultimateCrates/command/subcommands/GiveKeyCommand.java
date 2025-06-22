@@ -49,16 +49,21 @@ public class GiveKeyCommand implements SubCommand {
     }
 
     @Override
+    public String getPermission() {
+        return "uc.admin.givekey";
+    }
+
+    @Override
     public void execute(CommandSender sender, String[] args) {
         if (args.length < 1) {
-            sender.sendMessage(plugin.getMessagesManager().getMessage("messages.givekey.usage_givekey").replace("{syntax}", getSyntax()));
+            sender.sendMessage(plugin.getMessagesManager().getMessage("messages.givekey.usage_givekey").replace("%syntax%", getSyntax()));
             return;
         }
 
         String crateId = args[0].toLowerCase();
         Optional<Crate> optionalCrate = cratesManager.getCrate(crateId);
         if (optionalCrate.isEmpty()) {
-            sender.sendMessage(plugin.getMessagesManager().getMessage("messages.givekey.crate_not_found").replace("{crate}", crateId));
+            sender.sendMessage(plugin.getMessagesManager().getMessage("messages.givekey.crate_not_found").replace("%crate%", crateId));
             return;
         }
         Crate crate = optionalCrate.get();
@@ -69,7 +74,7 @@ public class GiveKeyCommand implements SubCommand {
         if (args.length >= 2) {
             target = Bukkit.getPlayerExact(args[1]);
             if (target == null) {
-                sender.sendMessage(plugin.getMessagesManager().getMessage("messages.givekey.player_not_found_named").replace("{player}", args[1]));
+                sender.sendMessage(plugin.getMessagesManager().getMessage("messages.givekey.player_not_found_named").replace("%player%", args[1]));
                 return;
             }
         } else if (sender instanceof Player) {
@@ -97,34 +102,34 @@ public class GiveKeyCommand implements SubCommand {
             target.getInventory().addItem(key);
             String crateName = ChatColor.translateAlternateColorCodes('&', crate.getDisplayName());
             sender.sendMessage(plugin.getMessagesManager().getMessage("messages.givekey.give_physical_key_sender")
-                    .replace("{amount}", String.valueOf(amount))
-                    .replace("{crate}", crateName)
-                    .replace("{player}", target.getName()));
+                    .replace("%amount%", String.valueOf(amount))
+                    .replace("%crate%", crateName)
+                    .replace("%player%", target.getName()));
             if (!target.equals(sender)) {
                 target.sendMessage(plugin.getMessagesManager().getMessage("messages.givekey.give_physical_key_target")
-                        .replace("{amount}", String.valueOf(amount))
-                        .replace("{crate}", crateName));
+                        .replace("%amount%", String.valueOf(amount))
+                        .replace("%crate%", crateName));
             }
         } else {
             try {
                 String crateName = ChatColor.translateAlternateColorCodes('&', crate.getDisplayName());
                 plugin.getDatabaseManager().getVirtualKeyStorage().giveKeys(target.getName(), crate.getId(), amount);
                 sender.sendMessage(plugin.getMessagesManager().getMessage("messages.givekey.give_virtual_key_sender")
-                        .replace("{amount}", String.valueOf(amount))
-                        .replace("{crate}", crateName)
-                        .replace("{player}", target.getName()));
+                        .replace("%amount%", String.valueOf(amount))
+                        .replace("%crate%", crateName)
+                        .replace("%player%", target.getName()));
 
                 int totalKeys = plugin.getDatabaseManager().getVirtualKeyStorage().getKeys(target.getName(), crate.getId());
 
                 sender.sendMessage(plugin.getMessagesManager().getMessage("messages.givekey.virtual_key_total")
-                        .replace("{player}", target.getName())
-                        .replace("{total}", String.valueOf(totalKeys))
-                        .replace("{crate}", crateName));
+                        .replace("%player%", target.getName())
+                        .replace("%total%", String.valueOf(totalKeys))
+                        .replace("%crate%", crateName));
 
                 if (!target.equals(sender)) {
                     target.sendMessage(plugin.getMessagesManager().getMessage("messages.givekey.give_virtual_key_target")
-                            .replace("{amount}", String.valueOf(amount))
-                            .replace("{crate}", crateName));
+                            .replace("%amount%", String.valueOf(amount))
+                            .replace("%crate%", crateName));
                 }
             } catch (Exception e) {
                 sender.sendMessage(plugin.getMessagesManager().getMessage("messages.givekey.give_virtual_key_error"));

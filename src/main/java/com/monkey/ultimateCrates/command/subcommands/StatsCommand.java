@@ -35,11 +35,24 @@ public class StatsCommand implements SubCommand {
     }
 
     @Override
+    public String getPermission() {
+        return "uc.stats.use";
+    }
+
+    public String getResetPermission() {
+        return "uc.admin.stats.reset";
+    }
+
+    @Override
     public void execute(CommandSender sender, String[] args) {
         UltimateCrates plugin = UltimateCrates.getInstance();
         CrateStatisticStorage statsStorage = plugin.getDatabaseManager().getCrateStatisticStorage();
 
         if (args.length >= 1 && args[0].equalsIgnoreCase("reset")) {
+            if (!sender.hasPermission(getResetPermission())) {
+                sender.sendMessage(plugin.getMessagesManager().getMessage("messages.command.no_permission"));
+                return;
+            }
             if (args.length == 2) {
                 String targetPlayerName = args[1];
                 statsStorage.resetPlayerStats(targetPlayerName);
@@ -51,6 +64,10 @@ public class StatsCommand implements SubCommand {
                 return;
             }
         } else if (args.length == 1 && args[0].equalsIgnoreCase("resetall")) {
+            if (!sender.hasPermission(getResetPermission())) {
+                sender.sendMessage(plugin.getMessagesManager().getMessage("messages.command.no_permission"));
+                return;
+            }
             statsStorage.resetAllStats();
             sender.sendMessage(plugin.getMessagesManager().getMessage("messages.stats.reset_all"));
             return;

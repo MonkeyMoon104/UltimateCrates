@@ -38,9 +38,14 @@ public class ReloadCommand implements SubCommand {
     }
 
     @Override
+    public String getPermission() {
+        return "uc.admin.reload";
+    }
+
+    @Override
     public void execute(CommandSender sender, String[] args) {
         plugin.reload();
-        sender.sendMessage(ChatColor.GREEN + "UltimateCrates ricaricato con successo!");
+        sender.sendMessage(plugin.getMessagesManager().getMessage("messages.command.reload_success"));
     }
 
     @Override

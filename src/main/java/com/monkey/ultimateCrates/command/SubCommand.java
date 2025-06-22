@@ -10,6 +10,7 @@ public interface SubCommand {
     String getDescription();
     String getSyntax();
     boolean onlyPlayers();
+    String getPermission();
 
     void execute(CommandSender sender, String[] args);
 

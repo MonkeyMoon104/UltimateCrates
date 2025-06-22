@@ -31,6 +31,13 @@ public class CrateOpenListener implements Listener {
 
         if (!crateBlockValidator.isCrateBlock(event, false)) return;
 
+        if (!event.getPlayer().hasPermission("uc.crate.open")) {
+            event.setCancelled(true);
+            String message = plugin.getMessagesManager().getMessage("messages.command.no_permission");
+            event.getPlayer().sendMessage(message);
+            return;
+        }
+
         event.setCancelled(true);
 
         NBTBlock nbtBlock = new NBTBlock(event.getClickedBlock());
