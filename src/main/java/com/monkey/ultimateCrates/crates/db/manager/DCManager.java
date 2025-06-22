@@ -20,14 +20,17 @@ public class DCManager {
     public void openConnection() throws SQLException {
         if (connection != null && !connection.isClosed()) return;
 
-        File dbFile = new File(plugin.getDataFolder(), "crates.db");
-        if (!dbFile.getParentFile().exists()) {
-            dbFile.getParentFile().mkdirs();
+        File storageFolder = new File(plugin.getDataFolder(), "storage");
+        if (!storageFolder.exists()) {
+            storageFolder.mkdirs();
         }
+
+        File dbFile = new File(storageFolder, "crates.db");
         String url = "jdbc:sqlite:" + dbFile.getAbsolutePath();
         connection = DriverManager.getConnection(url);
         createTablesIfNotExist();
     }
+
 
     private void createTablesIfNotExist() throws SQLException {
         String sqlPlacedCrates = """

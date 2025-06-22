@@ -1,4 +1,4 @@
-db_virtual:
+db_central:
   type: "sqlite"   # Scegli "sqlite" o "mysql"
   host: "localhost"
   port: 3306

@@ -35,7 +35,7 @@ public class DatabaseInitializer {
             return false;
         }
 
-        String dbType = plugin.getConfig().getString("db_virtual.type", "sqlite").toLowerCase();
+        String dbType = plugin.getConfig().getString("db_central.type", "sqlite").toLowerCase();
 
         if (dbType.equals("mysql")) {
             virtualKeyStorage = new MySQLVirtualKeyStorage(connection, logger);

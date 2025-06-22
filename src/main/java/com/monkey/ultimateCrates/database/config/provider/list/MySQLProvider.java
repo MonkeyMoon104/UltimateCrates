@@ -19,11 +19,11 @@ public class MySQLProvider implements DatabaseProvider {
     @Override
     public Connection connect() {
         try {
-            String host = plugin.getConfig().getString("db_virtual.host", "localhost");
-            int port = plugin.getConfig().getInt("db_virtual.port", 3306);
-            String database = plugin.getConfig().getString("db_virtual.database", "ultimatecrates");
-            String username = plugin.getConfig().getString("db_virtual.username", "root");
-            String password = plugin.getConfig().getString("db_virtual.password", "");
+            String host = plugin.getConfig().getString("db_central.host", "localhost");
+            int port = plugin.getConfig().getInt("db_central.port", 3306);
+            String database = plugin.getConfig().getString("db_central.database", "ultimatecrates");
+            String username = plugin.getConfig().getString("db_central.username", "root");
+            String password = plugin.getConfig().getString("db_central.password", "");
 
             String url = String.format("jdbc:mysql://%s:%d/%s?useSSL=false&autoReconnect=true", host, port, database);
             Connection connection = DriverManager.getConnection(url, username, password);

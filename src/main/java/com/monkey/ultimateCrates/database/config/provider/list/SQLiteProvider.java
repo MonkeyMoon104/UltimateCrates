@@ -20,7 +20,12 @@ public class SQLiteProvider implements DatabaseProvider {
     @Override
     public Connection connect() {
         try {
-            File dbFile = new File(plugin.getDataFolder(), "data.db");
+            File storageFolder = new File(plugin.getDataFolder(), "storage");
+            if (!storageFolder.exists()) {
+                storageFolder.mkdirs();
+            }
+
+            File dbFile = new File(storageFolder, "data.db");
             String url = "jdbc:sqlite:" + dbFile.getAbsolutePath();
 
             Connection connection = DriverManager.getConnection(url);
