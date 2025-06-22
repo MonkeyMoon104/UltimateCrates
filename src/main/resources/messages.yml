@@ -63,3 +63,4 @@ messages:
     break_hint: "&cPer rimuovere una crate, fai Shift + Click Destro."
     place_too_close: "&cNon puoi posizionare una crate così vicina ad un'altra!"
     preview_title: "&6Anteprima crate: %0%"
+    chance_format: "&7Probabilità: &e%chance%%"

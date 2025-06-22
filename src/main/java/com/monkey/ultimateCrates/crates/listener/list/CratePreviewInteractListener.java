@@ -51,14 +51,14 @@ public class CratePreviewInteractListener implements Listener {
     }
 
     private void openPreviewGUI(Player player, Crate crate) {
-        List<ItemStack> items = crate.getPrizes();
-        if (items.isEmpty()) {
+        var prizes = crate.getPrizes();
+        if (prizes.isEmpty()) {
             String msg = plugin.getMessagesManager().getMessage("messages.crate.no_prizes");
             player.sendMessage(msg);
             return;
         }
 
-        int size = Math.max(27, ((items.size() - 1) / 9 + 1) * 9);
+        int size = Math.max(27, ((prizes.size() - 1) / 9 + 1) * 9);
         size = Math.min(size, 54);
         String coloredCrateName = ChatColor.translateAlternateColorCodes('&', crate.getDisplayName());
         String title = plugin.getMessagesManager().getMessage("messages.crate.preview_title", coloredCrateName);
@@ -66,12 +66,26 @@ public class CratePreviewInteractListener implements Listener {
 
         Inventory inv = Bukkit.createInventory(null, size, title);
 
-        for (int i = 0; i < items.size() && i < size; i++) {
-            inv.setItem(i, items.get(i));
+        String chanceFormat = plugin.getMessagesManager().getMessage("messages.crate.chance_format");
+
+        for (int i = 0; i < prizes.size() && i < size; i++) {
+            var prize = prizes.get(i);
+            ItemStack item = prize.getItem().clone();
+            double chance = prize.getChance();
+
+            var meta = item.getItemMeta();
+            if (meta != null) {
+                List<String> lore = meta.hasLore() ? meta.getLore() : new java.util.ArrayList<>();
+                String formattedChance = chanceFormat.replace("%chance%", String.format("%.1f", chance));
+                lore.add(formattedChance);
+                meta.setLore(lore);
+                item.setItemMeta(meta);
+            }
+
+            inv.setItem(i, item);
         }
 
         previewManager.addPreviewTitle(title);
-
         player.openInventory(inv);
     }
 }

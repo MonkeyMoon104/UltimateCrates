@@ -1,5 +1,6 @@
 package com.monkey.ultimateCrates.crates.manager.parser;
 
+import com.monkey.ultimateCrates.crates.model.CratePrize;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -12,8 +13,8 @@ import java.util.Map;
 public class PrizeParser {
 
     @SuppressWarnings("unchecked")
-    public static List<ItemStack> parsePrizes(ConfigurationSection crateSection) {
-        List<ItemStack> prizes = new ArrayList<>();
+    public static List<CratePrize> parsePrizes(ConfigurationSection crateSection) {
+        List<CratePrize> prizes = new ArrayList<>();
         if (crateSection.isList("prizes")) {
             for (Map<?, ?> map : crateSection.getMapList("prizes")) {
                 String typeStr = (String) map.get("type");
@@ -42,7 +43,8 @@ public class PrizeParser {
                         item.setItemMeta(meta);
                     }
                 }
-                prizes.add(item);
+                double chance = map.get("chance") instanceof Number ? ((Number) map.get("chance")).doubleValue() : 0.0;
+                prizes.add(new CratePrize(item, chance));
             }
         }
         return prizes;

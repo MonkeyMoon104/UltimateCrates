@@ -3,6 +3,8 @@ package com.monkey.ultimateCrates.crates.listener.helper.general;
 import com.monkey.ultimateCrates.UltimateCrates;
 import com.monkey.ultimateCrates.crates.listener.helper.util.FireworkUtil;
 import com.monkey.ultimateCrates.crates.model.Crate;
+import com.monkey.ultimateCrates.crates.model.CratePrize;
+import com.monkey.ultimateCrates.crates.util.CratePrizeSelector;
 import com.monkey.ultimateCrates.database.func.vkeys.interf.VirtualKeyStorage;
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Material;
@@ -96,7 +98,14 @@ public class CrateOpener {
             return;
         }
 
-        ItemStack prize = prizes.get((int) (Math.random() * prizes.size()));
+        CratePrize selected = CratePrizeSelector.selectPrize(prizes);
+        if (selected == null) {
+            player.sendMessage(plugin.getMessagesManager().getMessage("messages.crate.no_prizes"));
+            return;
+        }
+
+        ItemStack prize = selected.getItem();
+
         player.getInventory().addItem(prize);
 
         String prizeName = prize.getItemMeta() != null && prize.getItemMeta().hasDisplayName()
