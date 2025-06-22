@@ -167,9 +167,10 @@ Includes a powerful tracking system:
 
 ## 📸 Small Preview Example
 
-> ![Crates](https://github.com/MonkeyMoon104/UltimateCrates/blob/master/2025-06-22_14.45.34.png?raw=true)
-> ![EffectCrates](https://github.com/MonkeyMoon104/UltimateCrates/blob/master/2025-06-22_14.49.15.png?raw=true)
-> ![StatsCrate](https://github.com/MonkeyMoon104/UltimateCrates/blob/master/2025-06-22_14.49.55.png?raw=true)
+> ![Crates](images/1.png)
+> ![EffectCrates](images/2.png)
+> ![StatsCrate](images/3.png)
+
 
 ---
 
