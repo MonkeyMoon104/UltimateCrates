@@ -9,6 +9,7 @@ depend:
   - PlayerParticles
   - PlaceholderAPI
   - LuckPerms
+  - Vault
 
 commands:
   crate:
@@ -57,9 +58,15 @@ permissions:
         description: Permette di vedere e usare le chiavi virtuali
         default: true
       uc.crate.open:
-        description: Permette di aprire le casse
+        description: Permette di aprire le crates
         default: true
       uc.preview.see:
-        description: Permette di vedere l'anteprima delle casse
+        description: Permette di vedere l'anteprima delle crates
+        default: true
+      uc.top.use:
+        description: Permetti di vedere la top dell'aperture delle crates
+        default: true
+      uc.buykey.use:
+        description: Permetti di comprare le key tramite l'economia del server
         default: true
 

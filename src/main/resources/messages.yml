@@ -8,20 +8,20 @@ messages:
   give:
     usage_give: "&cUso corretto: /crate give <crateId> <giocatore>"
     player_not_found: "&cGiocatore non trovato."
-    crate_not_found: "&cCrate '{crate}' non trovata."
-    give_success: "&aHai dato una crate '{crate}' a {player}."
+    crate_not_found: "&cCrate '%crate%&c' non trovata."
+    give_success: "&aHai dato una crate '%crate%&a' a &b%player%."
 
   givekey:
-    usage_givekey: "&cSintassi corretta: {syntax}"
-    player_not_found_named: "&cGiocatore non trovato: {player}"
+    usage_givekey: "&cSintassi corretta: %syntax%"
+    player_not_found_named: "&cGiocatore non trovato: %player%"
     player_required_console: "&cDevi specificare un giocatore quando esegui questo comando dalla console."
     amount_positive: "&cL'amount deve essere un numero positivo."
     amount_invalid: "&cL'amount deve essere un numero valido."
-    give_physical_key_sender: "&aHai dato {amount} chiave fisica della crate {crate} a {player}"
-    give_physical_key_target: "&aHai ricevuto {amount} chiave fisica della crate {crate}"
-    give_virtual_key_sender: "Hai dato {amount} chiave virtuale della crate {crate} a {player}"
-    virtual_key_total: "{player} ha ora un totale di {total} chiavi virtuali della crate {crate}"
-    give_virtual_key_target: "&aHai ricevuto {amount} chiave virtuale della crate {crate}"
+    give_physical_key_sender: "&aHai dato %amount% chiave fisica della crate %crate%&a a &b%player%"
+    give_physical_key_target: "&aHai ricevuto %amount% chiave fisica della crate %crate%&r"
+    give_virtual_key_sender: "Hai dato %amount% chiave virtuale della crate %crate%&a a &b%player%"
+    virtual_key_total: "%player% ha ora un totale di %total% chiavi virtuali della crate %crate%&r"
+    give_virtual_key_target: "&aHai ricevuto %amount% chiave virtuale della crate %crate%&r"
     give_virtual_key_error: "&cErrore durante l'aggiunta della chiave virtuale."
 
   help:
@@ -66,3 +66,19 @@ messages:
     place_too_close: "&cNon puoi posizionare una crate così vicina ad un'altra!"
     preview_title: "&6Anteprima crate: %0%"
     chance_format: "&7Probabilità: &e%chance%%"
+    
+  top:
+    usage: "&cUso corretto: /crate top <crateId> [pagina]"
+    empty: "&cNessun dato per la classifica di questa cassa."
+    header: "&6--- Classifica %crate% - Pagina %page% ---"
+    line: "&e%rank%. &a%player% &7- &f%amount% casse aperte"
+
+  buykey:
+    disabled: "§cL'acquisto di chiavi per questa cassa è disabilitato."
+    invalid_price: "§cIl prezzo di acquisto non è valido."
+    usage: "§cUso corretto: /crate buykey <crateId> [quantità]"
+    invalid_amount: "§cQuantità non valida!"
+    no_economy: "§cEconomia non disponibile."
+    not_enough_money: "§cNon hai abbastanza soldi."
+    transaction_failed: "§cErrore nella transazione."
+    success: "§aHai comprato %amount% chiavi della cassa %crate%&a per &e%price%$."

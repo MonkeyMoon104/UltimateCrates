@@ -5,6 +5,7 @@ import com.monkey.ultimateCrates.command.SubCommand;
 import com.monkey.ultimateCrates.crates.model.Crate;
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -61,13 +62,13 @@ public class GiveCommand implements SubCommand {
         Optional<Crate> optionalCrate = plugin.getCrateManager().getCrate(crateId);
         if (optionalCrate.isEmpty()) {
             sender.sendMessage(plugin.getMessagesManager().getMessage("messages.give.crate_not_found")
-                    .replace("{crate}", crateId));
+                    .replace("%crate%", crateId));
             return;
         }
 
         Crate crate = optionalCrate.get();
 
-        ItemStack item = new ItemStack(org.bukkit.Material.CHEST);
+        ItemStack item = new ItemStack(Material.CHEST);
         ItemMeta meta = item.getItemMeta();
 
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', crate.getDisplayName()));
@@ -91,8 +92,8 @@ public class GiveCommand implements SubCommand {
 
         sender.sendMessage(plugin.getMessagesManager()
                 .getMessage("messages.give.give_success")
-                .replace("{crate}", crateName)
-                .replace("{player}", target.getName()));
+                .replace("%crate%", crateName)
+                .replace("%player%", target.getName()));
     }
 
     @Override

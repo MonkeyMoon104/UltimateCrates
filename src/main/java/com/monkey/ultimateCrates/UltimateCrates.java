@@ -16,7 +16,9 @@ import com.monkey.ultimateCrates.setup.CrateAnimations;
 import com.monkey.ultimateCrates.setup.CrateListeners;
 import com.monkey.ultimateCrates.setup.PlacedCrateSync;
 import com.monkey.ultimateCrates.setup.SpawnedHolograms;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class UltimateCrates extends JavaPlugin {
@@ -34,10 +36,17 @@ public final class UltimateCrates extends JavaPlugin {
     private CratePreviewManager cratePreviewManager;
     private CratesConfigManager cratesConfigManager;
     private MessagesManager messagesManager;
+    private Economy economy;
 
     @Override
     public void onEnable() {
         instance = this;
+
+        if (!setupEconomy()) {
+            getLogger().severe("Vault con Economy non trovato, disabilito!");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
 
         configManager = new ConfigManager(this);
         configManager.loadMainConfig();
@@ -171,5 +180,23 @@ public final class UltimateCrates extends JavaPlugin {
 
     public MessagesManager getMessagesManager() {
         return messagesManager;
+    }
+
+    private boolean setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+
+        economy = rsp.getProvider();
+        return economy != null;
+    }
+
+    public Economy getEconomy() {
+        return economy;
     }
 }

@@ -18,6 +18,8 @@ public class CommandManager {
         register(new VirtualKeysCommand(plugin));
         register(new GiveCommand());
         register(new StatsCommand());
+        register(new TopCommand(plugin));
+        register(new BuyKeyCommand(plugin));
         register(new ReloadCommand(plugin));
     }
 

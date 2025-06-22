@@ -51,7 +51,7 @@ public class CrateLoader {
 
             RewardParser.RewardData rewardData = RewardParser.parseReward(crateSection);
 
-            Crate crate = new Crate(key, displayName, hologram, animations, prizes, particleEffectConfig, keyType, keyName, enchanted, rewardData.every(), rewardData.item(), rewardData.amount());
+            Crate crate = new Crate(key, displayName, hologram, animations, prizes, particleEffectConfig, keyType, keyName, enchanted, rewardData.every(), rewardData.item(), rewardData.amount(), keyData.canBuyEnabled(), keyData.canBuyCost());
             crates.put(key, crate);
         }
 

@@ -23,8 +23,10 @@ public class Crate {
     private final String rewardItem;
     private final int rewardAmount;
     private final List<CratePrize> prizes;
+    private final boolean canBuyEnabled;
+    private final double canBuyCost;
 
-    public Crate(String id, String displayName, List<String> hologramLines, List<String> animationTemplates, List<CratePrize> prizes, PCE particleEffectConfig, KeyType keyType, String keyName, boolean enchanted, int rewardEvery, String rewardItem, int rewardAmount) {
+    public Crate(String id, String displayName, List<String> hologramLines, List<String> animationTemplates, List<CratePrize> prizes, PCE particleEffectConfig, KeyType keyType, String keyName, boolean enchanted, int rewardEvery, String rewardItem, int rewardAmount, boolean canBuyEnabled, double canBuyCost) {
         this.id = id;
         this.displayName = displayName;
         this.hologramLines = hologramLines;
@@ -37,6 +39,8 @@ public class Crate {
         this.rewardEvery = rewardEvery;
         this.rewardItem = rewardItem;
         this.rewardAmount = rewardAmount;
+        this.canBuyEnabled = canBuyEnabled;
+        this.canBuyCost = canBuyCost;
     }
 
     public String getId() {
@@ -84,5 +88,13 @@ public class Crate {
 
     public int getRewardAmount() {
         return rewardAmount;
+    }
+
+    public boolean canBuyEnabled() {
+        return canBuyEnabled;
+    }
+
+    public double getCanBuyCost() {
+        return canBuyCost;
     }
 }

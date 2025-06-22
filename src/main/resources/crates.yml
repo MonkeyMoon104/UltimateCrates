@@ -5,6 +5,9 @@ crates:
       type: physic
       name: "&aCommon Crate Key"
       enchanted: true
+      canbuy:
+        enabled: true
+        cost: 100.0
     hologram:
       - "&a&lCommon Crate&r"
       - "&7Apri subito!"
@@ -40,6 +43,9 @@ crates:
       type: virtual
       enchanted: false
       name: "&6Legendary Crate Key"
+      canbuy:
+        enabled: true
+        cost: 500.0
     hologram:
       - "&6&lLegendary Crate&r"
       - "&5Sei fortunato!"

@@ -138,7 +138,7 @@ public class GiveKeyCommand implements SubCommand {
         }
     }
 
-    private ItemStack createPhysicalKey(Crate crate, int amount) {
+    ItemStack createPhysicalKey(Crate crate, int amount) {
         ItemStack key = new ItemStack(Material.TRIPWIRE_HOOK, amount);
 
         NBTItem nbtKey = new NBTItem(key);
