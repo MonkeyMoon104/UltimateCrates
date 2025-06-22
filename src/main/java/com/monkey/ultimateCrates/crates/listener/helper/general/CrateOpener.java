@@ -1,6 +1,7 @@
 package com.monkey.ultimateCrates.crates.listener.helper.general;
 
 import com.monkey.ultimateCrates.UltimateCrates;
+import com.monkey.ultimateCrates.crates.listener.helper.util.FireworkUtil;
 import com.monkey.ultimateCrates.crates.model.Crate;
 import com.monkey.ultimateCrates.database.func.vkeys.interf.VirtualKeyStorage;
 import de.tr7zw.nbtapi.NBTItem;
@@ -129,6 +130,16 @@ public class CrateOpener {
                             rewardEvery,
                             crate.getDisplayName()
                     ));
+                }
+
+                boolean animationEnabled = plugin.getCratesConfigManager().getCratesConfig()
+                        .getBoolean("crates." + crate.getId() + ".reward.animation.enabled", false);
+
+                if (animationEnabled) {
+                    int repeat = plugin.getCratesConfigManager().getCratesConfig()
+                            .getInt("crates." + crate.getId() + ".reward.animation.repeat", 1);
+
+                    FireworkUtil.startRewardFirework(player, plugin, repeat);
                 }
             }
         }
