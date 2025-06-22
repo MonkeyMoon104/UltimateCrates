@@ -16,9 +16,11 @@ import com.monkey.ultimateCrates.setup.CrateAnimations;
 import com.monkey.ultimateCrates.setup.CrateListeners;
 import com.monkey.ultimateCrates.setup.PlacedCrateSync;
 import com.monkey.ultimateCrates.setup.SpawnedHolograms;
+import com.monkey.ultimateCrates.util.DBC;
+import com.monkey.ultimateCrates.util.UCApi;
+import com.monkey.ultimateCrates.util.SEconomy;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.ArmorStand;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class UltimateCrates extends JavaPlugin {
@@ -42,11 +44,13 @@ public final class UltimateCrates extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        if (!setupEconomy()) {
+        if (!SEconomy.setup()) {
             getLogger().severe("Vault con Economy non trovato, disabilito!");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+        economy = SEconomy.getEconomy();
+
 
         configManager = new ConfigManager(this);
         configManager.loadMainConfig();
@@ -63,15 +67,14 @@ public final class UltimateCrates extends JavaPlugin {
         crateManager.loadCrates();
 
         databaseCrates = new DatabaseCrates(this);
-        try {
-            databaseCrates.openConnection();
-        } catch (Exception e) {
-            getLogger().severe("Errore durante l'apertura del database delle crates:");
-            e.printStackTrace();
-            getServer().getPluginManager().disablePlugin(this);
+
+        UCApi.init();
+
+        boolean dbc = DBC.init(databaseCrates);
+
+        if (!dbc) {
             return;
         }
-
 
         animationManager = new AnimationManager(this);
         particlesManager = new ParticlesManager(this);
@@ -180,20 +183,6 @@ public final class UltimateCrates extends JavaPlugin {
 
     public MessagesManager getMessagesManager() {
         return messagesManager;
-    }
-
-    private boolean setupEconomy() {
-        if (getServer().getPluginManager().getPlugin("Vault") == null) {
-            return false;
-        }
-
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp == null) {
-            return false;
-        }
-
-        economy = rsp.getProvider();
-        return economy != null;
     }
 
     public Economy getEconomy() {
