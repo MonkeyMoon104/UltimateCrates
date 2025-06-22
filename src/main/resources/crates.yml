@@ -1,6 +1,14 @@
 crates:
   common:
     name: "&aCommon Crate"
+    keys:
+      type: physic
+      name: "&aCommon Crate Key"
+      enchanted: true
+    hologram:
+      - "&a&lCommon Crate&r"
+      - "&7Apri subito!"
+      - "&ePremi fortunati ti aspettano!"
     reward:
       every: 5
       animation:
@@ -9,20 +17,12 @@ crates:
       prizeconf:
         item: DIAMOND
         amount: 30
-    hologram:
-      - "&a&lCommon Crate&r"
-      - "&7Apri subito!"
-      - "&ePremi fortunati ti aspettano!"
     animations:
       - "spiral"
     particle_effect:
       enabled: true
       effect: "heart"
       style: "sphere"
-    keys:
-      type: physic
-      name: "&aCommon Crate Key"
-      enchanted: true
     prizes:
       - type: DIAMOND
         amount: 3
@@ -34,6 +34,14 @@ crates:
 
   legendary:
     name: "&6Legendary Crate"
+    keys:
+      type: virtual
+      enchanted: false
+      name: "&6Legendary Crate Key"
+    hologram:
+      - "&6&lLegendary Crate&r"
+      - "&5Sei fortunato!"
+      - "&dQuesta crate contiene premi epici!"
     reward:
       every: 10
       animation:
@@ -42,20 +50,12 @@ crates:
       prizeconf:
         item: NETHERITE_INGOT
         amount: 35
-    hologram:
-      - "&6&lLegendary Crate&r"
-      - "&5Sei fortunato!"
-      - "&dQuesta crate contiene premi epici!"
     animations:
       - "fireworks"
     particle_effect:
       enabled: true
       effect: "totem_of_undying"
       style: "batman"
-    keys:
-      type: virtual
-      enchanted: false
-      name: "&6Legendary Crate Key"
     prizes:
       - type: NETHERITE_SWORD
         amount: 1
