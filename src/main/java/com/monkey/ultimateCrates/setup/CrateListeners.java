@@ -17,8 +17,8 @@ public class CrateListeners {
         pm.registerEvents(new CratePlaceListener(plugin, hologramManager), plugin);
         pm.registerEvents(new CrateKeyInteractListener(plugin), plugin);
         pm.registerEvents(new CrateOpenListener(plugin), plugin);
-        pm.registerEvents(new CrateBreakListener(hologramManager), plugin);
-        pm.registerEvents(new CratePreviewInteractListener(previewManager), plugin);
+        pm.registerEvents(new CrateBreakListener(hologramManager, plugin), plugin);
+        pm.registerEvents(new CratePreviewInteractListener(previewManager, plugin), plugin);
         pm.registerEvents(new CratePreviewInventoryListener(previewManager), plugin);
         pm.registerEvents(new CrateRemoveListener(plugin, hologramManager), plugin);
     }

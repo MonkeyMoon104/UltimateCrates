@@ -1,0 +1,65 @@
+messages:
+  command:
+    unknown_command: "&cComando sconosciuto. Usa /crate help"
+    only_players: "&cSolo i giocatori possono usare questo comando."
+
+  give:
+    usage_give: "&cUso corretto: /crate give <crateId> <giocatore>"
+    player_not_found: "&cGiocatore non trovato."
+    crate_not_found: "&cCrate '{crate}' non trovata."
+    give_success: "&aHai dato una crate '{crate}' a {player}."
+
+  givekey:
+    usage_givekey: "&cSintassi corretta: {syntax}"
+    player_not_found_named: "&cGiocatore non trovato: {player}"
+    player_required_console: "&cDevi specificare un giocatore quando esegui questo comando dalla console."
+    amount_positive: "&cL'amount deve essere un numero positivo."
+    amount_invalid: "&cL'amount deve essere un numero valido."
+    give_physical_key_sender: "&aHai dato {amount} chiave fisica della crate {crate} a {player}"
+    give_physical_key_target: "&aHai ricevuto {amount} chiave fisica della crate {crate}"
+    give_virtual_key_sender: "Hai dato {amount} chiave virtuale della crate {crate} a {player}"
+    virtual_key_total: "{player} ha ora un totale di {total} chiavi virtuali della crate {crate}"
+    give_virtual_key_target: "&aHai ricevuto {amount} chiave virtuale della crate {crate}"
+    give_virtual_key_error: "&cErrore durante l'aggiunta della chiave virtuale."
+
+  help:
+    header: "&8&m+-----------------------------+"
+    command_givekey: " &e/crate givekey <crate> [player] [amount]"
+    command_give: " &e/crate give <crate> <player>"
+    command_stats: " &e/crate stats"
+    command_reload: "&e/crate reload"
+    command_vkey: " &e/crate virtualkeys [player|reset <player>|resetall]"
+    command_help: " &e/crate help"
+    footer: "&8&m+-----------------------------+"
+
+  stats:
+    reset_player: "&aStatistiche resettate per il giocatore %player%"
+    reset_specify_player: "&cSpecifica un giocatore o usa 'resetall'."
+    reset_all: "&aTutte le statistiche sono state resettate."
+    only_players: "&cSolo i giocatori possono vedere le proprie statistiche senza argomenti."
+    crate_opens: "&7- %crate%&7: &b%amount% aperture"
+
+  virtualkeys:
+    reset_all: "&aTutte le chiavi virtuali sono state resettate."
+    reset_player: "&aChiavi virtuali resettate per &f%player%"
+    player_not_found: "&cGiocatore non trovato: %player%"
+    specify_player_console: "&cDevi specificare un giocatore quando esegui questo comando dalla console."
+    no_keys: "&e%player% non ha chiavi virtuali."
+    list_header: "&aChiavi virtuali di &f%player%&a:"
+    list_entry: " &7- &e%crate%&7: &b%amount%"
+    no_virtual_keys: "&7(Tutte le chiavi salvate appartengono a crate fisiche.)"
+
+  crate:
+    not_a_crate: "&cNon è una crate!"
+    only_physical_key_in_hand: "&cQuesta crate accetta solo chiavi fisiche. Devi avere una chiave fisica in mano."
+    must_have_physical_key: "&cNon puoi aprire questa crate senza una crate key fisica."
+    key_not_belong_to_crate: "&cQuesta chiave non appartiene a questa crate."
+    no_item_in_hand_for_virtual_key: "&cQuesta crate accetta solo chiavi virtuali. Non devi avere oggetti in mano."
+    not_enough_virtual_keys: "&cNon hai abbastanza chiavi virtuali per aprire questa crate."
+    no_prizes: "&cQuesta crate non contiene premi."
+    default_prize_name: "&e%0%"
+    win_prize: "&6Hai vinto: %0%"
+    reward_given: "&6Hai ricevuto la ricompensa garantita per aver aperto %0% crate %1%!"
+    break_hint: "&cPer rimuovere una crate, fai Shift + Click Destro."
+    place_too_close: "&cNon puoi posizionare una crate così vicina ad un'altra!"
+    preview_title: "&6Anteprima crate: %0%"

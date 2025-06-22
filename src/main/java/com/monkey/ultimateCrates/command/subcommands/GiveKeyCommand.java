@@ -7,6 +7,7 @@ import com.monkey.ultimateCrates.crates.model.Crate;
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -50,14 +51,14 @@ public class GiveKeyCommand implements SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (args.length < 1) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cSintassi corretta: " + getSyntax()));
+            sender.sendMessage(plugin.getMessagesManager().getMessage("messages.givekey.usage_givekey").replace("{syntax}", getSyntax()));
             return;
         }
 
         String crateId = args[0].toLowerCase();
         Optional<Crate> optionalCrate = cratesManager.getCrate(crateId);
         if (optionalCrate.isEmpty()) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cCrate non trovata: " + crateId));
+            sender.sendMessage(plugin.getMessagesManager().getMessage("messages.givekey.crate_not_found").replace("{crate}", crateId));
             return;
         }
         Crate crate = optionalCrate.get();
@@ -68,13 +69,13 @@ public class GiveKeyCommand implements SubCommand {
         if (args.length >= 2) {
             target = Bukkit.getPlayerExact(args[1]);
             if (target == null) {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cGiocatore non trovato: " + args[1]));
+                sender.sendMessage(plugin.getMessagesManager().getMessage("messages.givekey.player_not_found_named").replace("{player}", args[1]));
                 return;
             }
         } else if (sender instanceof Player) {
             target = (Player) sender;
         } else {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cDevi specificare un giocatore quando esegui questo comando dalla console."));
+            sender.sendMessage(plugin.getMessagesManager().getMessage("messages.givekey.player_required_console"));
             return;
         }
 
@@ -82,11 +83,11 @@ public class GiveKeyCommand implements SubCommand {
             try {
                 amount = Integer.parseInt(args[2]);
                 if (amount <= 0) {
-                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cL'amount deve essere un numero positivo."));
+                    sender.sendMessage(plugin.getMessagesManager().getMessage("messages.givekey.amount_positive"));
                     return;
                 }
             } catch (NumberFormatException e) {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cL'amount deve essere un numero valido."));
+                sender.sendMessage(plugin.getMessagesManager().getMessage("messages.givekey.amount_invalid"));
                 return;
             }
         }
@@ -94,31 +95,46 @@ public class GiveKeyCommand implements SubCommand {
         if (crate.getKeyType() == Crate.KeyType.PHYSIC) {
             ItemStack key = createPhysicalKey(crate, amount);
             target.getInventory().addItem(key);
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&aHai dato " + amount + " chiave fisica della crate " + crate.getDisplayName() + " a " + target.getName()));
+            String crateName = ChatColor.translateAlternateColorCodes('&', crate.getDisplayName());
+            sender.sendMessage(plugin.getMessagesManager().getMessage("messages.givekey.give_physical_key_sender")
+                    .replace("{amount}", String.valueOf(amount))
+                    .replace("{crate}", crateName)
+                    .replace("{player}", target.getName()));
             if (!target.equals(sender)) {
-                target.sendMessage(ChatColor.translateAlternateColorCodes('&',"Hai ricevuto " + amount + " chiave fisica della crate " + crate.getDisplayName()));
+                target.sendMessage(plugin.getMessagesManager().getMessage("messages.givekey.give_physical_key_target")
+                        .replace("{amount}", String.valueOf(amount))
+                        .replace("{crate}", crateName));
             }
         } else {
             try {
+                String crateName = ChatColor.translateAlternateColorCodes('&', crate.getDisplayName());
                 plugin.getDatabaseManager().getVirtualKeyStorage().giveKeys(target.getName(), crate.getId(), amount);
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"Hai dato " + amount + " chiave virtuale della crate " + crate.getDisplayName() + " a " + target.getName()));
+                sender.sendMessage(plugin.getMessagesManager().getMessage("messages.givekey.give_virtual_key_sender")
+                        .replace("{amount}", String.valueOf(amount))
+                        .replace("{crate}", crateName)
+                        .replace("{player}", target.getName()));
 
                 int totalKeys = plugin.getDatabaseManager().getVirtualKeyStorage().getKeys(target.getName(), crate.getId());
 
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&',target.getName() + " ha ora un totale di " + totalKeys + " chiavi virtuali della crate " + crate.getDisplayName()));
+                sender.sendMessage(plugin.getMessagesManager().getMessage("messages.givekey.virtual_key_total")
+                        .replace("{player}", target.getName())
+                        .replace("{total}", String.valueOf(totalKeys))
+                        .replace("{crate}", crateName));
 
                 if (!target.equals(sender)) {
-                    target.sendMessage(ChatColor.translateAlternateColorCodes('&',"Hai ricevuto " + amount + " chiave virtuale della crate " + crate.getDisplayName()));
+                    target.sendMessage(plugin.getMessagesManager().getMessage("messages.givekey.give_virtual_key_target")
+                            .replace("{amount}", String.valueOf(amount))
+                            .replace("{crate}", crateName));
                 }
             } catch (Exception e) {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"Errore durante l'aggiunta della chiave virtuale."));
+                sender.sendMessage(plugin.getMessagesManager().getMessage("messages.givekey.give_virtual_key_error"));
                 plugin.getLogger().severe("Errore nel givekey virtuale: " + e.getMessage());
             }
         }
     }
 
     private ItemStack createPhysicalKey(Crate crate, int amount) {
-        ItemStack key = new ItemStack(org.bukkit.Material.TRIPWIRE_HOOK, amount);
+        ItemStack key = new ItemStack(Material.TRIPWIRE_HOOK, amount);
 
         NBTItem nbtKey = new NBTItem(key);
         nbtKey.setString("crate_key", crate.getId());

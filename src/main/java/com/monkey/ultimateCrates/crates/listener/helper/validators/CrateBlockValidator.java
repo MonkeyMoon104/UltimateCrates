@@ -18,7 +18,8 @@ public class CrateBlockValidator {
         boolean hasCrateId = nbtBlock.getData().hasTag("crate_id");
 
         if (!hasCrateId && sendMessageIfFalse) {
-            event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "&cNon è una crate!"));
+            String msg = plugin.getMessagesManager().getMessage("messages.crate.not_a_crate");
+            event.getPlayer().sendMessage(msg);
         }
 
         return hasCrateId;

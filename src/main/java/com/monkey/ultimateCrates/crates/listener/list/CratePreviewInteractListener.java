@@ -21,9 +21,11 @@ import java.util.Optional;
 public class CratePreviewInteractListener implements Listener {
 
     private final CratePreviewManager previewManager;
+    private final UltimateCrates plugin;
 
-    public CratePreviewInteractListener(CratePreviewManager previewManager) {
+    public CratePreviewInteractListener(CratePreviewManager previewManager, UltimateCrates plugin) {
         this.previewManager = previewManager;
+        this.plugin = plugin;
     }
 
     @EventHandler
@@ -37,7 +39,7 @@ public class CratePreviewInteractListener implements Listener {
         if (!nbtBlock.getData().hasTag("crate_id")) return;
 
         String crateId = nbtBlock.getData().getString("crate_id");
-        Optional<Crate> crateOpt = UltimateCrates.getInstance().getCrateManager().getCrate(crateId);
+        Optional<Crate> crateOpt = plugin.getCrateManager().getCrate(crateId);
         if (!crateOpt.isPresent()) return;
 
         Crate crate = crateOpt.get();
@@ -51,13 +53,16 @@ public class CratePreviewInteractListener implements Listener {
     private void openPreviewGUI(Player player, Crate crate) {
         List<ItemStack> items = crate.getPrizes();
         if (items.isEmpty()) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cQuesta crate non contiene premi."));
+            String msg = plugin.getMessagesManager().getMessage("messages.crate.no_prizes");
+            player.sendMessage(msg);
             return;
         }
 
         int size = Math.max(27, ((items.size() - 1) / 9 + 1) * 9);
         size = Math.min(size, 54);
-        String title = ChatColor.translateAlternateColorCodes('&', crate.getDisplayName());
+        String coloredCrateName = ChatColor.translateAlternateColorCodes('&', crate.getDisplayName());
+        String title = plugin.getMessagesManager().getMessage("messages.crate.preview_title", coloredCrateName);
+        title = ChatColor.translateAlternateColorCodes('&', title);
 
         Inventory inv = Bukkit.createInventory(null, size, title);
 

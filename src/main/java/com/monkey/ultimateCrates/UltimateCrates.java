@@ -3,6 +3,7 @@ package com.monkey.ultimateCrates;
 import com.monkey.ultimateCrates.command.CrateCommand;
 import com.monkey.ultimateCrates.config.ConfigManager;
 import com.monkey.ultimateCrates.config.CratesConfigManager;
+import com.monkey.ultimateCrates.config.MessagesManager;
 import com.monkey.ultimateCrates.crates.listener.helper.manager.CrateHologramManager;
 import com.monkey.ultimateCrates.crates.listener.helper.manager.CratePreviewManager;
 import com.monkey.ultimateCrates.crates.manager.CratesManager;
@@ -32,6 +33,7 @@ public final class UltimateCrates extends JavaPlugin {
     private CrateHologramManager crateHologramManager;
     private CratePreviewManager cratePreviewManager;
     private CratesConfigManager cratesConfigManager;
+    private MessagesManager messagesManager;
 
     @Override
     public void onEnable() {
@@ -42,6 +44,8 @@ public final class UltimateCrates extends JavaPlugin {
 
         cratesConfigManager = new CratesConfigManager(this);
         cratesConfigManager.loadCratesConfig();
+
+        messagesManager = new MessagesManager(this);
 
         databaseManager = new DatabaseManager(this);
         databaseManager.setup();
@@ -106,6 +110,7 @@ public final class UltimateCrates extends JavaPlugin {
 
         configManager.reloadMainConfig();
         cratesConfigManager.reloadCratesConfig();
+        messagesManager.reload();
         crateManager.loadCrates();
 
         PlacedCrateSync.synchronize(this);
@@ -162,5 +167,9 @@ public final class UltimateCrates extends JavaPlugin {
 
     public CratesConfigManager getCratesConfigManager() {
         return cratesConfigManager;
+    }
+
+    public MessagesManager getMessagesManager() {
+        return messagesManager;
     }
 }

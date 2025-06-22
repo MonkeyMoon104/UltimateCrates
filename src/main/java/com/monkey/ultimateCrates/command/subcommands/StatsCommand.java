@@ -40,19 +40,19 @@ public class StatsCommand implements SubCommand {
         CrateStatisticStorage statsStorage = plugin.getDatabaseManager().getCrateStatisticStorage();
 
         if (args.length >= 1 && args[0].equalsIgnoreCase("reset")) {
-
             if (args.length == 2) {
                 String targetPlayerName = args[1];
                 statsStorage.resetPlayerStats(targetPlayerName);
-                sender.sendMessage(ChatColor.GREEN + "Statistiche resettate per il giocatore " + targetPlayerName);
+                sender.sendMessage(plugin.getMessagesManager().getMessage("messages.stats.reset_player")
+                        .replace("%player%", targetPlayerName));
                 return;
             } else {
-                sender.sendMessage(ChatColor.RED + "Specifica un giocatore o usa 'resetall'.");
+                sender.sendMessage(plugin.getMessagesManager().getMessage("messages.stats.reset_specify_player"));
                 return;
             }
         } else if (args.length == 1 && args[0].equalsIgnoreCase("resetall")) {
             statsStorage.resetAllStats();
-            sender.sendMessage(ChatColor.GREEN + "Tutte le statistiche sono state resettate.");
+            sender.sendMessage(plugin.getMessagesManager().getMessage("messages.stats.reset_all"));
             return;
         }
 
@@ -62,7 +62,7 @@ public class StatsCommand implements SubCommand {
             targetName = args[0];
         } else {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(ChatColor.RED + "Solo i giocatori possono vedere le proprie statistiche senza argomenti.");
+                sender.sendMessage(plugin.getMessagesManager().getMessage("messages.stats.only_players"));
                 return;
             }
             targetName = sender.getName();
@@ -70,8 +70,10 @@ public class StatsCommand implements SubCommand {
 
         plugin.getCrateManager().getCrates().forEach(crate -> {
             int opened = statsStorage.getCrateOpens(targetName, crate.getId());
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    "&7- &6" + crate.getDisplayName() + "&7: &b" + opened + " aperture"));
+            String crateName = ChatColor.translateAlternateColorCodes('&', crate.getDisplayName());
+            sender.sendMessage(plugin.getMessagesManager().getMessage("messages.stats.crate_opens")
+                    .replace("%crate%", crateName)
+                    .replace("%amount%", String.valueOf(opened)));
         });
     }
 

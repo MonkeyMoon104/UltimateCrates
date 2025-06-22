@@ -4,7 +4,6 @@ import com.monkey.ultimateCrates.UltimateCrates;
 import com.monkey.ultimateCrates.crates.model.Crate;
 import com.monkey.ultimateCrates.database.func.vkeys.interf.VirtualKeyStorage;
 import de.tr7zw.nbtapi.NBTItem;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -21,7 +20,7 @@ public class CrateOpener {
 
     public void tryOpenCrate(Player player, String crateId) {
         Optional<Crate> crateOpt = plugin.getCrateManager().getCrate(crateId);
-        if (!crateOpt.isPresent()) return;
+        if (crateOpt.isEmpty()) return;
 
         Crate crate = crateOpt.get();
         ItemStack handItem = player.getInventory().getItemInMainHand();
@@ -42,19 +41,19 @@ public class CrateOpener {
 
     private boolean hasValidPhysicalKey(ItemStack handItem, Crate crate, Player player) {
         if (handItem == null || handItem.getType() == Material.AIR) {
-            player.sendMessage(ChatColor.RED + "Questa crate accetta solo chiavi fisiche. Devi avere una chiave fisica in mano.");
+            player.sendMessage(plugin.getMessagesManager().getMessage("messages.crate.only_physical_key_in_hand"));
             return false;
         }
 
         NBTItem nbtItem = new NBTItem(handItem);
         if (!nbtItem.hasTag("crate_key")) {
-            player.sendMessage(ChatColor.RED + "Non puoi aprire questa crate senza una crate key fisica.");
+            player.sendMessage(plugin.getMessagesManager().getMessage("messages.crate.must_have_physical_key"));
             return false;
         }
 
         String keyCrateId = nbtItem.getString("crate_key");
         if (!keyCrateId.equalsIgnoreCase(crate.getId())) {
-            player.sendMessage(ChatColor.RED + "Questa chiave non appartiene a questa crate.");
+            player.sendMessage(plugin.getMessagesManager().getMessage("messages.crate.key_not_belong_to_crate"));
             return false;
         }
 
@@ -71,14 +70,14 @@ public class CrateOpener {
 
     private boolean hasValidVirtualKey(ItemStack handItem, Crate crate, Player player) {
         if (handItem != null && handItem.getType() != Material.AIR) {
-            player.sendMessage(ChatColor.RED + "Questa crate accetta solo chiavi virtuali. Non devi avere oggetti in mano.");
+            player.sendMessage(plugin.getMessagesManager().getMessage("messages.crate.no_item_in_hand_for_virtual_key"));
             return false;
         }
 
         VirtualKeyStorage storage = plugin.getDatabaseManager().getVirtualKeyStorage();
         int keys = storage.getKeys(player.getName(), crate.getId());
         if (keys < 1) {
-            player.sendMessage(ChatColor.RED + "Non hai abbastanza chiavi virtuali per aprire questa crate.");
+            player.sendMessage(plugin.getMessagesManager().getMessage("messages.crate.not_enough_virtual_keys"));
             return false;
         }
         return true;
@@ -92,7 +91,7 @@ public class CrateOpener {
     private void crateWinPrize(Player player, Crate crate) {
         var prizes = crate.getPrizes();
         if (prizes.isEmpty()) {
-            player.sendMessage(ChatColor.RED + "Questa crate non contiene premi.");
+            player.sendMessage(plugin.getMessagesManager().getMessage("messages.crate.no_prizes"));
             return;
         }
 
@@ -101,8 +100,9 @@ public class CrateOpener {
 
         String prizeName = prize.getItemMeta() != null && prize.getItemMeta().hasDisplayName()
                 ? prize.getItemMeta().getDisplayName()
-                : ChatColor.YELLOW + prize.getType().toString();
-        player.sendMessage(ChatColor.GOLD + "Hai vinto: " + prizeName);
+                : plugin.getMessagesManager().getMessage("messages.crate.default_prize_name", prize.getType().toString());
+
+        player.sendMessage(plugin.getMessagesManager().getMessage("messages.crate.win_prize", prizeName));
 
         var animationManager = plugin.getAnimationManager();
         var location = player.getLocation();
@@ -124,7 +124,11 @@ public class CrateOpener {
                 ItemStack rewardItem = parseRewardPrize(crate.getRewardItem(), crate.getRewardAmount());
                 if (rewardItem != null) {
                     player.getInventory().addItem(rewardItem);
-                    player.sendMessage(ChatColor.GOLD + "Hai ricevuto la ricompensa garantita per aver aperto " + rewardEvery + " crate " + crate.getDisplayName() + "!");
+                    player.sendMessage(plugin.getMessagesManager().getMessage(
+                            "messages.crate.reward_given",
+                            rewardEvery,
+                            crate.getDisplayName()
+                    ));
                 }
             }
         }

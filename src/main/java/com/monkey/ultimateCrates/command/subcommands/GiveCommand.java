@@ -4,9 +4,7 @@ import com.monkey.ultimateCrates.UltimateCrates;
 import com.monkey.ultimateCrates.command.SubCommand;
 import com.monkey.ultimateCrates.crates.model.Crate;
 import de.tr7zw.nbtapi.NBTItem;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -40,34 +38,39 @@ public class GiveCommand implements SubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
+        UltimateCrates plugin = UltimateCrates.getInstance();
+
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cUso corretto: /crate give <crateId> <giocatore>"));
+            sender.sendMessage(plugin.getMessagesManager().getMessage("messages.give.usage_give"));
             return;
         }
 
         String crateId = args[0];
-        Player target = Bukkit.getPlayerExact(args[1]);
+        Player target = plugin.getServer().getPlayerExact(args[1]);
 
         if (target == null) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cGiocatore non trovato."));
+            sender.sendMessage(plugin.getMessagesManager().getMessage("messages.give.player_not_found"));
             return;
         }
 
-        Optional<Crate> optionalCrate = UltimateCrates.getInstance().getCrateManager().getCrate(crateId);
+        Optional<Crate> optionalCrate = plugin.getCrateManager().getCrate(crateId);
         if (optionalCrate.isEmpty()) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cCrate '" + crateId + "' non trovata."));
+            sender.sendMessage(plugin.getMessagesManager().getMessage("messages.give.crate_not_found")
+                    .replace("{crate}", crateId));
             return;
         }
 
         Crate crate = optionalCrate.get();
 
-        ItemStack item = new ItemStack(Material.CHEST);
+        ItemStack item = new ItemStack(org.bukkit.Material.CHEST);
         ItemMeta meta = item.getItemMeta();
+
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', crate.getDisplayName()));
 
         List<String> coloredLore = crate.getHologramLines().stream()
                 .map(line -> ChatColor.translateAlternateColorCodes('&', line))
                 .toList();
+
         meta.setLore(coloredLore);
 
         item.setItemMeta(meta);
@@ -77,22 +80,29 @@ public class GiveCommand implements SubCommand {
 
         item = nbtItem.getItem();
 
-
         target.getInventory().addItem(item);
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aHai dato una crate '" + crate.getDisplayName() + "' a " + target.getName()));
+
+        String crateName = ChatColor.translateAlternateColorCodes('&', crate.getDisplayName());
+
+        sender.sendMessage(plugin.getMessagesManager()
+                .getMessage("messages.give.give_success")
+                .replace("{crate}", crateName)
+                .replace("{player}", target.getName()));
     }
 
     @Override
     public List<String> tabComplete(Player player, String[] args) {
+        UltimateCrates plugin = UltimateCrates.getInstance();
+
         if (args.length == 1) {
-            return UltimateCrates.getInstance().getCrateManager().getAllCrateIds().stream()
+            return plugin.getCrateManager().getAllCrateIds().stream()
                     .filter(id -> id.startsWith(args[0].toLowerCase()))
                     .toList();
         }
 
         if (args.length == 2) {
-            return Bukkit.getOnlinePlayers().stream()
-                    .map(Player::getName)
+            return plugin.getServer().getOnlinePlayers().stream()
+                    .map(org.bukkit.entity.Player::getName)
                     .filter(name -> name.toLowerCase().startsWith(args[1].toLowerCase()))
                     .toList();
         }

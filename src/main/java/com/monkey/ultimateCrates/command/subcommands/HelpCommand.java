@@ -2,15 +2,17 @@ package com.monkey.ultimateCrates.command.subcommands;
 
 import com.monkey.ultimateCrates.command.CommandManager;
 import com.monkey.ultimateCrates.command.SubCommand;
-import org.bukkit.ChatColor;
+import com.monkey.ultimateCrates.UltimateCrates;
 import org.bukkit.command.CommandSender;
 
 public class HelpCommand implements SubCommand {
 
     private final CommandManager manager;
+    private final UltimateCrates plugin;
 
-    public HelpCommand(CommandManager manager) {
+    public HelpCommand(CommandManager manager, UltimateCrates plugin) {
         this.manager = manager;
+        this.plugin = plugin;
     }
 
     @Override
@@ -35,12 +37,13 @@ public class HelpCommand implements SubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&8&m+-----------------------------+"));
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&'," &eUltimateCrates &7- &6Comandi disponibili:"));
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&'," &e/crate givekey <player> <crate> <amount>"));
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&'," &e/crate open <crate>"));
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&'," &e/crate stats"));
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&'," &e/crate help"));
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&8&m+-----------------------------+"));
+        sender.sendMessage(plugin.getMessagesManager().getMessage("messages.help.header"));
+        sender.sendMessage(plugin.getMessagesManager().getMessage("messages.help.command_givekey"));
+        sender.sendMessage(plugin.getMessagesManager().getMessage("messages.help.command_give"));
+        sender.sendMessage(plugin.getMessagesManager().getMessage("messages.help.command_stats"));
+        sender.sendMessage(plugin.getMessagesManager().getMessage("messages.help.command_vkey"));
+        sender.sendMessage(plugin.getMessagesManager().getMessage("messages.help.command_reload"));
+        sender.sendMessage(plugin.getMessagesManager().getMessage("messages.help.command_help"));
+        sender.sendMessage(plugin.getMessagesManager().getMessage("messages.help.footer"));
     }
 }

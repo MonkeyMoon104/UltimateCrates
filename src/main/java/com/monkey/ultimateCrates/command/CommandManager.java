@@ -2,7 +2,6 @@ package com.monkey.ultimateCrates.command;
 
 import com.monkey.ultimateCrates.UltimateCrates;
 import com.monkey.ultimateCrates.command.subcommands.*;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -11,14 +10,15 @@ import java.util.*;
 public class CommandManager {
 
     private final Map<String, SubCommand> subCommands = new HashMap<>();
+    private final UltimateCrates plugin = UltimateCrates.getInstance();
 
     public CommandManager() {
-        register(new HelpCommand(this));
-        register(new GiveKeyCommand(UltimateCrates.getInstance()));
-        register(new VirtualKeysCommand(UltimateCrates.getInstance()));
+        register(new HelpCommand(this, UltimateCrates.getInstance()));
+        register(new GiveKeyCommand(plugin));
+        register(new VirtualKeysCommand(plugin));
         register(new GiveCommand());
         register(new StatsCommand());
-        register(new ReloadCommand(UltimateCrates.getInstance()));
+        register(new ReloadCommand(plugin));
     }
 
     private void register(SubCommand command) {
@@ -33,12 +33,12 @@ public class CommandManager {
 
         SubCommand cmd = subCommands.get(args[0].toLowerCase());
         if (cmd == null) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cComando sconosciuto. Usa /crate help"));
+            sender.sendMessage(plugin.getMessagesManager().getMessage("messages.command.unknown_command"));
             return true;
         }
 
         if (cmd.onlyPlayers() && !(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cSolo i giocatori possono usare questo comando."));
+            sender.sendMessage(plugin.getMessagesManager().getMessage("messages.command.only_players"));
             return true;
         }
 

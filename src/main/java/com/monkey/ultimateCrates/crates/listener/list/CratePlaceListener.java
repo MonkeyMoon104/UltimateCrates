@@ -6,7 +6,6 @@ import com.monkey.ultimateCrates.crates.model.Crate;
 import com.monkey.ultimateCrates.crates.model.PCE;
 import de.tr7zw.nbtapi.NBTBlock;
 import de.tr7zw.nbtapi.NBTItem;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
@@ -45,7 +44,8 @@ public class CratePlaceListener implements Listener {
 
         for (Location loc : hologramManager.getHolograms().keySet()) {
             if (loc.getWorld().equals(blockLoc.getWorld()) && loc.distance(blockLoc) < 1.5) {
-                player.sendMessage(ChatColor.RED + "Non puoi posizionare una crate così vicina ad un'altra!");
+                String msg = plugin.getMessagesManager().getMessage("messages.crate.place_too_close");
+                player.sendMessage(msg);
                 event.setCancelled(true);
                 return;
             }
