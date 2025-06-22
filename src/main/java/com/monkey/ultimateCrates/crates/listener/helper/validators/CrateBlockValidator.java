@@ -13,10 +13,13 @@ public class CrateBlockValidator {
         this.plugin = plugin;
     }
 
-    public boolean isCrateBlock(PlayerInteractEvent event) {
+    public boolean isCrateBlock(PlayerInteractEvent event, boolean sendMessageIfFalse) {
         NBTBlock nbtBlock = new NBTBlock(event.getClickedBlock());
-
         boolean hasCrateId = nbtBlock.getData().hasTag("crate_id");
+
+        if (!hasCrateId && sendMessageIfFalse) {
+            event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "&cNon è una crate!"));
+        }
 
         return hasCrateId;
     }

@@ -31,10 +31,11 @@ public class CrateKeyInteractListener implements Listener {
         if (!crateKeyValidator.isCrateKey(event.getItem())) return;
 
         if (action == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null) {
-            if (!crateBlockValidator.isCrateBlock(event)) {
+            if (!crateBlockValidator.isCrateBlock(event, true)) {
                 event.setCancelled(true);
                 event.setUseItemInHand(org.bukkit.event.Event.Result.DENY);
             }
         }
+
     }
 }

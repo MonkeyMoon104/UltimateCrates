@@ -29,7 +29,7 @@ public class CrateOpenListener implements Listener {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if (event.getPlayer().isSneaking()) return;
 
-        if (!crateBlockValidator.isCrateBlock(event)) return;
+        if (!crateBlockValidator.isCrateBlock(event, false)) return;
 
         event.setCancelled(true);
 
