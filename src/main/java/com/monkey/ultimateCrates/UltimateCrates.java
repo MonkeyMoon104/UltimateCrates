@@ -2,28 +2,21 @@ package com.monkey.ultimateCrates;
 
 import com.monkey.ultimateCrates.command.CrateCommand;
 import com.monkey.ultimateCrates.config.ConfigManager;
-import com.monkey.ultimateCrates.crates.CratesManager;
+import com.monkey.ultimateCrates.config.CratesConfigManager;
+import com.monkey.ultimateCrates.crates.listener.helper.manager.CrateHologramManager;
+import com.monkey.ultimateCrates.crates.listener.helper.manager.CratePreviewManager;
+import com.monkey.ultimateCrates.crates.manager.CratesManager;
 import com.monkey.ultimateCrates.crates.animation.AnimationManager;
-import com.monkey.ultimateCrates.crates.animation.list.*;
-import com.monkey.ultimateCrates.crates.db.DatabaseCrates;
-import com.monkey.ultimateCrates.crates.listener.CrateKeyInteractListener;
-import com.monkey.ultimateCrates.crates.listener.CrateOpenListener;
-import com.monkey.ultimateCrates.crates.listener.CratePlaceListener;
-import com.monkey.ultimateCrates.crates.listener.CratePreviewListener;
-import com.monkey.ultimateCrates.crates.model.Crate;
-import com.monkey.ultimateCrates.crates.model.ParticleEffectConfig;
-import com.monkey.ultimateCrates.crates.particles.ParticlesManager;
-import com.monkey.ultimateCrates.database.DatabaseManager;
+import com.monkey.ultimateCrates.crates.db.central.DatabaseCrates;
+import com.monkey.ultimateCrates.crates.particles.manager.ParticlesManager;
+import com.monkey.ultimateCrates.database.manager.DatabaseManager;
 import com.monkey.ultimateCrates.placeholder.UCPlaceholder;
-import org.bukkit.Location;
+import com.monkey.ultimateCrates.setup.CrateAnimations;
+import com.monkey.ultimateCrates.setup.CrateListeners;
+import com.monkey.ultimateCrates.setup.PlacedCrateSync;
+import com.monkey.ultimateCrates.setup.SpawnedHolograms;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 public final class UltimateCrates extends JavaPlugin {
 
@@ -34,101 +27,101 @@ public final class UltimateCrates extends JavaPlugin {
     private DatabaseManager databaseManager;
     private AnimationManager animationManager;
     private DatabaseCrates databaseCrates;
-    private CratePlaceListener cratePlaceListener;
     private ParticlesManager particlesManager;
+
+    private CrateHologramManager crateHologramManager;
+    private CratePreviewManager cratePreviewManager;
+    private CratesConfigManager cratesConfigManager;
 
     @Override
     public void onEnable() {
         instance = this;
 
         configManager = new ConfigManager(this);
-        configManager.loadConfigs();
+        configManager.loadMainConfig();
+
+        cratesConfigManager = new CratesConfigManager(this);
+        cratesConfigManager.loadCratesConfig();
 
         databaseManager = new DatabaseManager(this);
         databaseManager.setup();
 
         crateManager = new CratesManager(this);
         crateManager.loadCrates();
+
         databaseCrates = new DatabaseCrates(this);
+        try {
+            databaseCrates.openConnection();
+        } catch (Exception e) {
+            getLogger().severe("Errore durante l'apertura del database delle crates:");
+            e.printStackTrace();
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
 
         animationManager = new AnimationManager(this);
         particlesManager = new ParticlesManager(this);
 
-        registerCommands();
-        registerAnimations();
-        registerListeners();
-        registerExpansions();
+        crateHologramManager = new CrateHologramManager();
+        cratePreviewManager = new CratePreviewManager();
 
-        try {
-            databaseCrates.openConnection();
+        getCommand("crate").setExecutor(new CrateCommand());
 
-            Map<Location, String> loadedCrates = databaseCrates.loadAllPlacedCrates();
+        CrateAnimations.registerAll(animationManager);
+        CrateListeners.registerAll(this);
 
-            for (Map.Entry<Location, String> entry : loadedCrates.entrySet()) {
-                Location loc = entry.getKey();
-                String crateId = entry.getValue();
+        new UCPlaceholder(this).register();
 
-                spawnHologramAt(loc, crateId);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            getLogger().severe("Errore caricando crate dal DB!");
-        }
-
-        synchronizePlacedCratesEffects();
+        SpawnedHolograms.loadAllFromDatabase(this, crateHologramManager);
+        PlacedCrateSync.synchronize(this);
 
         getLogger().info("UltimateCrates enabled!");
     }
 
     @Override
     public void onDisable() {
-        cratePlaceListener.getHolograms().values().forEach(list -> list.forEach(ArmorStand::remove));
-        cratePlaceListener.getHolograms().clear();
+        CrateHologramManager.getHolograms().values().forEach(list -> list.forEach(ArmorStand::remove));
+        CrateHologramManager.getHolograms().clear();
+
         if (databaseManager != null) {
             databaseManager.close();
         }
+
+        if (databaseCrates != null) {
+            try {
+                databaseCrates.closeConnection();
+            } catch (Exception e) {
+                getLogger().severe("Errore durante la chiusura del database delle crates:");
+                e.printStackTrace();
+            }
+        }
+
         getLogger().info("UltimateCrates disabled.");
     }
 
-    private void registerListeners() {
-        cratePlaceListener = new CratePlaceListener();
-        getServer().getPluginManager().registerEvents(cratePlaceListener, this);
-        getServer().getPluginManager().registerEvents(new CratePreviewListener(), this);
-        getServer().getPluginManager().registerEvents(new CrateKeyInteractListener(this), this);
-        getServer().getPluginManager().registerEvents(new CrateOpenListener(this), this);
+    public void reload() {
+        CrateHologramManager.getHolograms().values().forEach(list -> list.forEach(ArmorStand::remove));
+        CrateHologramManager.getHolograms().clear();
 
+        configManager.reloadMainConfig();
+        cratesConfigManager.reloadCratesConfig();
+        crateManager.loadCrates();
 
-    }
+        PlacedCrateSync.synchronize(this);
 
-    private void registerCommands() {
-        getCommand("crate").setExecutor(new CrateCommand());
-    }
+        animationManager.clear();
+        CrateAnimations.registerAll(animationManager);
 
-    private void registerAnimations() {
-        animationManager.registerAnimation(new SparkleAnimation());
-        animationManager.registerAnimation(new CircleAnimation());
-        animationManager.registerAnimation(new SpiralAnimation());
-        animationManager.registerAnimation(new FireworksAnimation());
-        animationManager.registerAnimation(new RisingSmokeAnimation());
-        animationManager.registerAnimation(new HeartBeatAnimation());
-        animationManager.registerAnimation(new RainAnimation());
-        animationManager.registerAnimation(new FlameRingAnimation());
-        animationManager.registerAnimation(new PortalSwirlAnimation());
-        animationManager.registerAnimation(new BubbleUpAnimation());
+        if (databaseManager != null) {
+            databaseManager.close();
+        }
 
-    }
+        databaseManager.setup();
 
-    private void registerExpansions() {
-        new UCPlaceholder(this).register();
-    }
+        SpawnedHolograms.loadAllFromDatabase(this, crateHologramManager);
 
-    public AnimationManager getAnimationManager() {
-        return animationManager;
-    }
-
-    public ParticlesManager getParticlesManager() {
-        return particlesManager;
+        getLogger().info("UltimateCrates ricaricato con successo.");
     }
 
     public static UltimateCrates getInstance() {
@@ -151,119 +144,23 @@ public final class UltimateCrates extends JavaPlugin {
         return databaseCrates;
     }
 
-    public void spawnHologramAt(Location loc, String crateId) {
-        Optional<Crate> crateOpt = getCrateManager().getCrate(crateId);
-        if (!crateOpt.isPresent()) {
-            getLogger().warning("Crate con ID " + crateId + " non trovata per hologram.");
-            return;
-        }
-        Crate crate = crateOpt.get();
-
-        Location baseLoc = loc.clone().add(0.5, 1.5, 0.5);
-
-        List<ArmorStand> stands = new ArrayList<>();
-
-        for (int i = 0; i < crate.getHologramLines().size(); i++) {
-            String line = crate.getHologramLines().get(i);
-            Location lineLoc = baseLoc.clone().add(0, -0.25 * i, 0);
-
-            ArmorStand stand = loc.getWorld().spawn(lineLoc, ArmorStand.class, armorStand -> {
-                armorStand.setVisible(false);
-                armorStand.setMarker(true);
-                armorStand.setCustomNameVisible(true);
-                armorStand.setCustomName(line.replace("&", "§"));
-                armorStand.setGravity(false);
-                armorStand.setSmall(true);
-                armorStand.setInvulnerable(true);
-                armorStand.setCollidable(false);
-            });
-
-            stands.add(stand);
-        }
-
-        cratePlaceListener.registerHologram(loc, stands);
+    public AnimationManager getAnimationManager() {
+        return animationManager;
     }
 
-    public void reload() {
-        cratePlaceListener.getHolograms().values().forEach(list -> list.forEach(ArmorStand::remove));
-        cratePlaceListener.getHolograms().clear();
-
-        configManager.reloadConfigs();
-
-        crateManager.loadCrates();
-
-        synchronizePlacedCratesEffects();
-
-        animationManager.clear();
-        registerAnimations();
-
-        if (databaseManager != null) {
-            databaseManager.close();
-        }
-        databaseManager.setup();
-
-        try {
-            databaseCrates.openConnection();
-            Map<Location, String> loadedCrates = databaseCrates.loadAllPlacedCrates();
-            for (Map.Entry<Location, String> entry : loadedCrates.entrySet()) {
-                spawnHologramAt(entry.getKey(), entry.getValue());
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            getLogger().severe("Errore durante il reload del database crate!");
-        }
-
-        getLogger().info("UltimateCrates ricaricato con successo.");
+    public ParticlesManager getParticlesManager() {
+        return particlesManager;
     }
 
-    public void synchronizePlacedCratesEffects() {
-        try {
-            Map<Location, String> placedCrates = getDatabaseCrates().loadAllPlacedCrates();
-
-            for (Map.Entry<Location, String> entry : placedCrates.entrySet()) {
-                Location location = entry.getKey();
-                String crateId = entry.getValue();
-
-                Optional<Crate> optionalCrate = getCrateManager().getCrate(crateId);
-                if (optionalCrate.isEmpty()) continue;
-
-                Crate crate = optionalCrate.get();
-                ParticleEffectConfig config = crate.getParticleEffectConfig();
-
-                if (config == null || !config.isEnabled()) {
-                    getParticlesManager().removeEffectAt(location);
-                    try {
-                        getDatabaseCrates().removeFixedParticle(location);
-                    } catch (SQLException ex) {
-                        getLogger().severe("Errore nella rimozione dell'effetto disabilitato da DB: " + ex.getMessage());
-                    }
-                    continue;
-                }
-
-                Integer effectId = getDatabaseCrates().getFixedEffectIdAt(location);
-                String savedEffectType = getDatabaseCrates().getFixedEffectTypeAt(location);
-                String savedEffectStyle = getDatabaseCrates().getFixedEffectStyleAt(location);
-
-                boolean needsUpdate = effectId == null
-                        || !config.getType().equalsIgnoreCase(savedEffectType)
-                        || !config.getEffect().equalsIgnoreCase(savedEffectStyle);
-
-                if (needsUpdate) {
-                    if (effectId != null) {
-                        getParticlesManager().removeEffectAt(location);
-                    }
-
-                    try {
-                        int spawnedId = getParticlesManager().spawnFixedEffectAt(location, config.getType(), config.getEffect());
-                        getDatabaseCrates().saveFixedParticle(location, config.getType(), config.getEffect(), spawnedId);
-                    } catch (Exception ex) {
-                        getLogger().severe("Errore nella riapplicazione dell'effetto: " + ex.getMessage());
-                    }
-                }
-            }
-        } catch (SQLException ex) {
-            getLogger().severe("Errore durante la sincronizzazione delle particelle: " + ex.getMessage());
-        }
+    public CrateHologramManager getCrateHologramManager() {
+        return crateHologramManager;
     }
 
+    public CratePreviewManager getCratePreviewManager() {
+        return cratePreviewManager;
+    }
+
+    public CratesConfigManager getCratesConfigManager() {
+        return cratesConfigManager;
+    }
 }

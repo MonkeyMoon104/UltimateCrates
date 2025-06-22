@@ -2,7 +2,7 @@ package com.monkey.ultimateCrates.command.subcommands;
 
 import com.monkey.ultimateCrates.UltimateCrates;
 import com.monkey.ultimateCrates.command.SubCommand;
-import com.monkey.ultimateCrates.database.CrateStatisticStorage;
+import com.monkey.ultimateCrates.database.func.sstorage.interf.CrateStatisticStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

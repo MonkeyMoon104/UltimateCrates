@@ -2,7 +2,7 @@ package com.monkey.ultimateCrates.command.subcommands;
 
 import com.monkey.ultimateCrates.UltimateCrates;
 import com.monkey.ultimateCrates.command.SubCommand;
-import com.monkey.ultimateCrates.crates.CratesManager;
+import com.monkey.ultimateCrates.crates.manager.CratesManager;
 import com.monkey.ultimateCrates.crates.model.Crate;
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Bukkit;
@@ -12,7 +12,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Collections;
 import java.util.List;

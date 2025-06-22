@@ -14,7 +14,7 @@ public class Crate {
     private final List<String> hologramLines;
     private final List<String> animationTemplates;
     private final List<ItemStack> prizes;
-    private final ParticleEffectConfig particleEffectConfig;
+    private final PCE particleEffectConfig;
 
     private final KeyType keyType;
     private final String keyName;
@@ -24,7 +24,7 @@ public class Crate {
     private final String rewardItem;
     private final int rewardAmount;
 
-    public Crate(String id, String displayName, List<String> hologramLines, List<String> animationTemplates, List<ItemStack> prizes, ParticleEffectConfig particleEffectConfig, KeyType keyType, String keyName, boolean enchanted, int rewardEvery, String rewardItem, int rewardAmount) {
+    public Crate(String id, String displayName, List<String> hologramLines, List<String> animationTemplates, List<ItemStack> prizes, PCE particleEffectConfig, KeyType keyType, String keyName, boolean enchanted, int rewardEvery, String rewardItem, int rewardAmount) {
         this.id = id;
         this.displayName = displayName;
         this.hologramLines = hologramLines;
@@ -59,7 +59,7 @@ public class Crate {
         return prizes;
     }
 
-    public ParticleEffectConfig getParticleEffectConfig() {
+    public PCE getParticleEffectConfig() {
         return particleEffectConfig;
     }
     public KeyType getKeyType() {
