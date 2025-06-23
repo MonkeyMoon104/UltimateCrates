@@ -269,22 +269,23 @@ Includes a powerful tracking system:
 
 ## 🌟 Support the Project
 
+## 🌟 Support the Project
+
 <p align="center">
-  <a href="https://github.com/MonkeyMoon104/UltimateCrates/stargazers">
-    <img src="https://img.shields.io/github/stars/MonkeyMoon104/UltimateCrates?style=for-the-badge&label=Star%20on%20GitHub&logo=github" alt="GitHub Stars">
+  <a href="https://github.com/MonkeyMoon104/UltimateCrates" target="_blank">
+    <img src="https://img.shields.io/github/stars/MonkeyMoon104/UltimateCrates?style=for-the-badge&label=Leave%20a%20Star&logo=github" alt="GitHub Stars">
   </a>
-  <a href="https://github.com/MonkeyMoon104/UltimateCrates/issues">
-    <img src="https://img.shields.io/github/issues/MonkeyMoon104/UltimateCrates?style=for-the-badge&label=Report%20Issue&logo=github" alt="GitHub Issues">
-  </a>
-  <a href="https://github.com/MonkeyMoon104/UltimateCrates?tab=readme-ov-file#🌟-support-the-project" target="_blank">
-    <img src="https://img.shields.io/badge/Click%20Here%20to ⭐-Support-orange?style=for-the-badge" alt="Direct Star Button">
+  <a href="https://github.com/MonkeyMoon104/UltimateCrates/issues" target="_blank">
+    <img src="https://img.shields.io/github/issues/MonkeyMoon104/UltimateCrates?style=for-the-badge&label=Report%20a%20Bug&logo=github" alt="GitHub Issues">
   </a>
 </p>
 
 <p align="center">
-  <b>If you enjoy using UltimateCrates, please consider leaving a ⭐ on GitHub!</b><br>
+  <b>If you enjoy using UltimateCrates, please support it by leaving a ⭐ on GitHub.</b><br>
   ❤️‍🔥
+
 </p>
+
 
 
 ---
