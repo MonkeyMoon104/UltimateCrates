@@ -4,6 +4,7 @@ import com.monkey.ultimateCrates.UltimateCrates;
 import com.monkey.ultimateCrates.command.SubCommand;
 import com.monkey.ultimateCrates.crates.manager.CratesManager;
 import com.monkey.ultimateCrates.crates.model.Crate;
+import com.monkey.ultimateCrates.util.KeyUtils;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -131,7 +132,7 @@ public class BuyKeyCommand implements SubCommand {
     }
 
     private ItemStack createPhysicalKey(Crate crate, int amount) {
-        return new GiveKeyCommand(plugin).createPhysicalKey(crate, amount);
+        return KeyUtils.createPhysicalKey(crate, amount);
     }
 
     @Override

@@ -5,3 +5,24 @@ db_central:
   database: "ultimatecrates"
   username: "root"
   password: "password"
+
+
+events:
+  enabled: true
+  delay: 1 #in minuti
+  world: "world"
+  random_select_event:
+    enabled: true
+    selected_active_events:
+      - key_hunt
+  list:
+    treasure_hunt:
+      crate_id: "crateid"
+
+    key_hunt:
+      key_name: "common"
+
+    stats_hunt:
+      block: "material"
+      stats_increment:
+        - "crateid"

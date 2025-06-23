@@ -11,6 +11,9 @@ import com.monkey.ultimateCrates.crates.animation.AnimationManager;
 import com.monkey.ultimateCrates.crates.db.central.DatabaseCrates;
 import com.monkey.ultimateCrates.crates.particles.manager.ParticlesManager;
 import com.monkey.ultimateCrates.database.manager.DatabaseManager;
+import com.monkey.ultimateCrates.events.CrateEventsManager;
+import com.monkey.ultimateCrates.events.KeyHuntEvent;
+import com.monkey.ultimateCrates.events.handler.KeyHuntExecutor;
 import com.monkey.ultimateCrates.placeholder.UCPlaceholder;
 import com.monkey.ultimateCrates.setup.CrateAnimations;
 import com.monkey.ultimateCrates.setup.CrateListeners;
@@ -19,7 +22,9 @@ import com.monkey.ultimateCrates.setup.SpawnedHolograms;
 import com.monkey.ultimateCrates.util.DBC;
 import com.monkey.ultimateCrates.util.UCApi;
 import com.monkey.ultimateCrates.util.SEconomy;
+import com.monkey.ultimateCrates.util.WGUtils;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -39,6 +44,7 @@ public final class UltimateCrates extends JavaPlugin {
     private CratesConfigManager cratesConfigManager;
     private MessagesManager messagesManager;
     private Economy economy;
+    private CrateEventsManager eventsManager;
 
     @Override
     public void onEnable() {
@@ -69,6 +75,7 @@ public final class UltimateCrates extends JavaPlugin {
         databaseCrates = new DatabaseCrates(this);
 
         UCApi.init();
+        WGUtils.setup();
 
         boolean dbc = DBC.init(databaseCrates);
 
@@ -82,6 +89,12 @@ public final class UltimateCrates extends JavaPlugin {
         crateHologramManager = new CrateHologramManager();
         cratePreviewManager = new CratePreviewManager();
 
+        Bukkit.getScheduler().runTaskLater(this, () -> {
+            eventsManager = new CrateEventsManager(configManager.getMainConfig());
+            eventsManager.scheduleRandomEvent(this);
+        }, 40L);
+
+
         getCommand("crate").setExecutor(new CrateCommand());
 
         CrateAnimations.registerAll(animationManager);
@@ -92,6 +105,8 @@ public final class UltimateCrates extends JavaPlugin {
         SpawnedHolograms.loadAllFromDatabase(this, crateHologramManager);
         PlacedCrateSync.synchronize(this);
 
+        getServer().
+
         getLogger().info("UltimateCrates enabled!");
     }
 
@@ -99,6 +114,8 @@ public final class UltimateCrates extends JavaPlugin {
     public void onDisable() {
         CrateHologramManager.getHolograms().values().forEach(list -> list.forEach(ArmorStand::remove));
         CrateHologramManager.getHolograms().clear();
+
+        eventsCancel();
 
         if (databaseManager != null) {
             databaseManager.close();
@@ -120,6 +137,8 @@ public final class UltimateCrates extends JavaPlugin {
         CrateHologramManager.getHolograms().values().forEach(list -> list.forEach(ArmorStand::remove));
         CrateHologramManager.getHolograms().clear();
 
+        eventsCancel();
+
         configManager.reloadMainConfig();
         cratesConfigManager.reloadCratesConfig();
         messagesManager.reload();
@@ -138,8 +157,22 @@ public final class UltimateCrates extends JavaPlugin {
 
         SpawnedHolograms.loadAllFromDatabase(this, crateHologramManager);
 
+        eventsManager = new CrateEventsManager(configManager.getMainConfig());
+        eventsManager.scheduleRandomEvent(this);
+
         getLogger().info("UltimateCrates ricaricato con successo.");
     }
+
+    public void eventsCancel() {
+        if (eventsManager != null) {
+            eventsManager.cancelScheduledEvent();
+        }
+
+        KeyHuntExecutor.end(false);
+        //TreasureHuntExecutor.end(false);
+        //StatsHuntExecutor.end(false);
+    }
+
 
     public static UltimateCrates getInstance() {
         return instance;
@@ -188,4 +221,9 @@ public final class UltimateCrates extends JavaPlugin {
     public Economy getEconomy() {
         return economy;
     }
+
+    public CrateEventsManager getCrateEventsManager() {
+        return eventsManager;
+    }
+
 }

@@ -10,6 +10,8 @@ depend:
   - PlaceholderAPI
   - LuckPerms
   - Vault
+  - WorldGuard
+  - WorldEdit
 
 commands:
   crate:
