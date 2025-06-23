@@ -6,14 +6,9 @@ import com.monkey.ultimateCrates.events.KeyHuntEvent;
 import com.monkey.ultimateCrates.events.db.func.EventsDBFunctions;
 import com.monkey.ultimateCrates.events.util.EventLocationUtils;
 import com.monkey.ultimateCrates.events.util.RegionUtils;
-import com.monkey.ultimateCrates.util.KeyUtils;
 import de.tr7zw.nbtapi.NBTBlock;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Container;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Optional;
 
@@ -24,6 +19,8 @@ public class KeyHuntExecutor {
     private static boolean running = false;
 
     private static final EventsDBFunctions dbFunctions = new EventsDBFunctions();
+    private static KeyHuntEvent currentKeyHuntEvent;
+
 
     public static void start(KeyHuntEvent event, int durationMinutes) {
         if (running) return;
@@ -60,20 +57,10 @@ public class KeyHuntExecutor {
         NBTBlock nbtBlock = new NBTBlock(block);
         nbtBlock.getData().setString("ultimatecrates_keyhunt", crate.getId());
 
-        if (crate.getKeyType() == Crate.KeyType.PHYSIC) {
-            BlockState state = block.getState();
-            if (state instanceof Container container) {
-                Inventory inv = container.getInventory();
-                ItemStack key = KeyUtils.createPhysicalKey(crate, 1);
-                for (int i = 0; i < inv.getSize(); i++) {
-                    inv.setItem(i, key.clone());
-                }
-            }
-        }
-
         currentKeyHuntChestLocation = location;
         currentKeyHuntCrate = crate;
         running = true;
+        currentKeyHuntEvent = event;
 
         dbFunctions.saveKeyHuntChest(world.getName(),
                 location.getBlockX(), location.getBlockY(), location.getBlockZ(),
@@ -116,6 +103,7 @@ public class KeyHuntExecutor {
 
         currentKeyHuntChestLocation = null;
         currentKeyHuntCrate = null;
+        currentKeyHuntEvent = null;
         dbFunctions.clearKeyHuntChest();
     }
 
@@ -130,4 +118,8 @@ public class KeyHuntExecutor {
     public static boolean isRunning() {
         return running;
     }
+    public static KeyHuntEvent getCurrentKeyHuntEvent() {
+        return currentKeyHuntEvent;
+    }
+
 }

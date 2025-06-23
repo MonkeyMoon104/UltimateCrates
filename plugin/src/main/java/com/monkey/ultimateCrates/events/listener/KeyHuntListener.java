@@ -45,12 +45,13 @@ public class KeyHuntListener implements Listener {
 
         clickedBlock.setType(Material.AIR);
 
+        int amount = KeyHuntExecutor.getCurrentKeyHuntEvent().getAmount();
         if (crate.getKeyType() == Crate.KeyType.PHYSIC) {
-            player.getInventory().addItem(KeyUtils.createPhysicalKey(crate, 1));
+            player.getInventory().addItem(KeyUtils.createPhysicalKey(crate, amount));
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     "&6[UltimateCrates] &aHai trovato la chiave misteriosa! " + crate.getKeyName()));
         } else if (crate.getKeyType() == Crate.KeyType.VIRTUAL) {
-            UltimateCrates.getInstance().getDatabaseManager().getVirtualKeyStorage().giveKeys(player.getName(), crate.getId(), 1);
+            UltimateCrates.getInstance().getDatabaseManager().getVirtualKeyStorage().giveKeys(player.getName(), crate.getId(), amount);
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     "&6[UltimateCrates] &aHai trovato la chiave misteriosa! " + crate.getKeyName()));
         }

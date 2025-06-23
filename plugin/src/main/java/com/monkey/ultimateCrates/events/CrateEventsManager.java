@@ -59,8 +59,9 @@ public class CrateEventsManager {
 
                     case "key_hunt":
                         String keyName = eventSection.getString("key_name");
+                        int amount = eventSection.getInt("amount", 1);
                         if (keyName != null) {
-                            keyHunts.put(key, new KeyHuntEvent(keyName));
+                            keyHunts.put(key, new KeyHuntEvent(keyName, amount));
                         }
                         break;
 

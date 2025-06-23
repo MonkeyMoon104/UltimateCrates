@@ -21,6 +21,7 @@ events:
 
     key_hunt:
       key_name: "common"
+      amount: 2
 
     stats_hunt:
       block: "material"
