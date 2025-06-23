@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Minecraft-1.21-blue?style=for-the-badge">
   <img src="https://img.shields.io/badge/API-Paper-yellow?style=for-the-badge">
-  <img src="https://img.shields.io/badge/Version-1.1.5-brightgreen?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Version-1.1.6-brightgreen?style=for-the-badge">
   <a href="https://github.com/MonkeyMoon104/UltimateCrates/releases/latest">
     <img src="https://img.shields.io/badge/Download-UltimateCrates-blueviolet?style=for-the-badge">
   </a>
@@ -21,6 +21,7 @@
 * 📦 **Multiple Crate Types** with full customization
 * 🎆 **Advanced Visual Effects & Animations**
 * 📊 **Statistics & Top Players System**
+* 🔌 **Official Developer API** to manage stats and leaderboards
 * 🧠 **PlaceholderAPI Support** for integration in scoreboards, tabs, etc.
 * 💰 **Vault Integration** for economy and key purchasing
 * 🧼 **MySQL or SQLite Database Support**
@@ -132,6 +133,83 @@ crates:
 
 ---
 
+## 📢 API Interface!
+
+UltimateCrates now includes an official API interface for developers!
+
+[![UltimateCrates API](https://img.shields.io/badge/View%20on-GitHub-171515?style=for-the-badge&logo=github)](https://github.com/MonkeyMoon104/UCApi)
+
+---
+
+## 🔌 Developer API
+
+UltimateCrates provides a clean and easy-to-use **developer API** via the `UltimateCratesProvider` interface.
+
+### 🌎 JitPack Helper
+[![](https://jitpack.io/v/MonkeyMoon104/UCApi.svg)](https://jitpack.io/#MonkeyMoon104/UCApi)
+
+
+### 📦 Maven Dependency
+
+```xml
+<repository>
+  <id>jitpack.io</id>
+  <url>https://jitpack.io</url>
+</repository>
+
+<dependency>
+  <groupId>com.github.MonkeyMoon104</groupId>
+  <artifactId>UCApi</artifactId>
+  <version>TAG</version>
+</dependency>
+```
+
+### 🧩 Accessing the API
+
+```java
+import com.monkey.ultimatecrates.api.UltimateCratesAPI;
+import com.monkey.ultimatecrates.api.UltimateCratesProvider;
+
+UltimateCratesProvider api = UltimateCratesAPI.get();
+```
+
+### 🛠️ Available Methods
+
+```java
+public interface UltimateCratesProvider {
+
+    void incrementCrateOpen(String playerName, String crateId);
+
+    int getCrateOpens(String playerName, String crateId);
+
+    List<LeaderboardEntry> getLeaderboard(String crateId, int page, int rowPerPage);
+
+    void resetPlayerStats(String playerName);
+
+    void resetAllStats();
+}
+```
+
+### 🔍 API Status
+
+```java
+boolean available = UltimateCratesAPI.isRegistered();
+```
+
+### 📝 Registering the API (internal use only)
+
+```java
+public class MainPlugin extends JavaPlugin {
+  public void onEnable() {
+    UltimateCratesAPI.register(newProvider, getLogger());
+  }
+}
+```
+
+> ⚠️ The `register` method can only be called once. If it's called again, it will be ignored with a warning.
+
+---
+
 ## 💬 Customizable Messages
 
 All messages are editable from `messages.yml`. Supports color codes and dynamic placeholders like `%crate%`, `%amount%`, `%player%`, etc.
@@ -186,5 +264,27 @@ Includes a powerful tracking system:
 
 > Have ideas, suggestions or bugs to report?<br>
 > [Open an issue](https://github.com/MonkeyMoon104/UltimateCrates/issues) or reach me on Discord!
+
+---
+
+## 🌟 Support the Project
+
+<p align="center">
+  <a href="https://github.com/MonkeyMoon104/UltimateCrates/stargazers">
+    <img src="https://img.shields.io/github/stars/MonkeyMoon104/UltimateCrates?style=for-the-badge&label=Star%20on%20GitHub&logo=github" alt="GitHub Stars">
+  </a>
+  <a href="https://github.com/MonkeyMoon104/UltimateCrates/issues">
+    <img src="https://img.shields.io/github/issues/MonkeyMoon104/UltimateCrates?style=for-the-badge&label=Report%20Issue&logo=github" alt="GitHub Issues">
+  </a>
+  <a href="https://github.com/MonkeyMoon104/UltimateCrates?tab=readme-ov-file#🌟-support-the-project" target="_blank">
+    <img src="https://img.shields.io/badge/Click%20Here%20to ⭐-Support-orange?style=for-the-badge" alt="Direct Star Button">
+  </a>
+</p>
+
+<p align="center">
+  <b>If you enjoy using UltimateCrates, please consider leaving a ⭐ on GitHub!</b><br>
+  ❤️‍🔥
+</p>
+
 
 ---
