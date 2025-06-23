@@ -269,8 +269,6 @@ Includes a powerful tracking system:
 
 ## 🌟 Support the Project
 
-## 🌟 Support the Project
-
 <p align="center">
   <a href="https://github.com/MonkeyMoon104/UltimateCrates" target="_blank">
     <img src="https://img.shields.io/github/stars/MonkeyMoon104/UltimateCrates?style=for-the-badge&label=Leave%20a%20Star&logo=github" alt="GitHub Stars">
