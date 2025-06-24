@@ -1,7 +1,8 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Minecraft-1.21-blue?style=for-the-badge">
   <img src="https://img.shields.io/badge/API-Paper-yellow?style=for-the-badge">
-  <img src="https://img.shields.io/badge/Version-1.1.7-brightgreen?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Version-1.1.8-brightgreen?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Proxy Support-BungeeCord%20%26%20Velocity-ff69b4?style=for-the-badge">
   <a href="https://github.com/MonkeyMoon104/UltimateCrates/releases/latest">
     <img src="https://img.shields.io/badge/Download-UltimateCrates-blueviolet?style=for-the-badge">
   </a>
@@ -10,8 +11,9 @@
   </a>
 </p>
 
+
 <h1 align="center">UltimateCrates</h1>
-<p align="center"><b>A powerful, animated and fully customizable crates plugin for Paper 1.21+</b></p>
+<p align="center"><b>A powerful, animated and fully customizable crates plugin for Paper + Proxy Support (BungeeCord & Velocity) 1.21+</b></p>
 
 ---
 
@@ -52,9 +54,39 @@ Make sure these dependencies are installed:
 
 ---
 
-## 🧩 Configuration
+## 🧩 Configuration Configproxy.yml
 
-### `config.yml (db function)`
+### `(messages proxy)`
+
+```yaml
+messages:
+  no_permission: "&cNon hai il permesso per eseguire questo comando."
+  player_not_found: "&cGiocatore non trovato."
+  reload_success: "&aUCProxy ricaricato con successo."
+  only_op: "&cSolo gli OP possono eseguire questo comando."
+  server_not_found: "&cServer non trovato."
+  server_textcomponent: "&a[Clicca per teletrasportarti al giocatore]"
+  connect_failed: "&cConnessione al server fallita"
+````
+
+### `(template notify proxy)`
+
+```yaml
+event_proxy_notify:
+  title: "&eNUOVO EVENTO INIZIATO"
+  lines:
+    - ''
+    - '&7È iniziato un nuovo evento'
+    - '&7Evento: &e%event%'
+    - '&7Fine evento tra: &a%eventEnd% minuti'
+    - '&7Server: &6%server%'
+    - ''
+````
+---
+
+## 🧩 Configuration Config.yml
+
+### `(db function)`
 
 ```yaml
 db_central:
@@ -66,6 +98,7 @@ db_central:
   password: "password"
 ````
 
+### `(events function)`
 ```yaml
 events:
   enabled: true #Funzione generale principale per eventi
@@ -99,6 +132,13 @@ events:
       increment_amount: 2 #Quante statistiche per ciascuna crate devono venire aumentate
 ````
 
+### `(proxy function)`
+```yaml
+proxy:
+enabled: false #Abilita per ottenere le notifiche sincronizzate all'avvio di ogni evento, disabilita per non ricevere nulla (Questa funzione serve solo per le notifiche)
+server-name: "servername" #Se abiliti il proxy assicurati di inserire il server-name corretto altrimenti verrà mandato il messaggio di notifica ma senza il server giusto infatti i player non potranno spostarsi nel server dove c'è l'evento!
+````
+
 ### `crates.yml`
 
 Each crate includes:
@@ -125,10 +165,10 @@ crates:
 
 ---
 
-## 🔧 Commands
+## 🔧 Commands - Proxy
 
 | Command                                    | Description                   |
-| ------------------------------------------ | ----------------------------- |
+|--------------------------------------------|-------------------------------|
 | `/crate`                                   | Main command                  |
 | `/crate help`                              | Shows help                    |
 | `/crate give <crate> <player>`             | Give a crate to a player      |
@@ -138,35 +178,39 @@ crates:
 | `/crate top <crate>`                       | Show crate leaderboard        |
 | `/crate buykey <crate> [amount]`           | Buy keys with Vault           |
 | `/crate reload`                            | Reload plugin without restart |
+| `/ucpreload` - `(Proxy)`                   | Reload Proxy Plugin           |
+ 
 
 ---
 
 ## 🔐 Permissions
 
-### Admin
+### Admin - Proxy
 
 * `uc.admin` – All administrative permissions
 
-  * `uc.admin.give`
-  * `uc.admin.givekey`
-  * `uc.admin.reload`
-  * `uc.admin.stats.reset`
-  * `uc.admin.vkeys.reset`
-  * `uc.admin.break`
-  * `uc.admin.crate.place`
+  * `uc.admin.give` - `bukkit`
+  * `uc.admin.givekey` - `bukkit`
+  * `uc.admin.reload` - `bukkit`
+  * `uc.admin.stats.reset` - `bukkit`
+  * `uc.admin.vkeys.reset` - `bukkit`
+  * `uc.admin.break` - `bukkit`
+  * `uc.admin.crate.place` - `bukkit`
+  * `ucproxy.reload` - `PROXY`
 
-### User
+### User - Proxy
 
 * `uc.user` – All basic player permissions
 
-  * `uc.help.use`
-  * `uc.stats.use`
-  * `uc.vkeys.use`
-  * `uc.crate.open`
-  * `uc.preview.see`
-  * `uc.top.use`
-  * `uc.buykey.use`
-  * `uc.crateevent.open`
+  * `uc.help.use` - `bukkit`
+  * `uc.stats.use` - `bukkit`
+  * `uc.vkeys.use` - `bukkit`
+  * `uc.crate.open` - `bukkit`
+  * `uc.preview.see` - `bukkit`
+  * `uc.top.use` - `bukkit`
+  * `uc.buykey.use` - `bukkit`
+  * `uc.crateevent.open` - `bukkit`
+  * `ucproxy.event.notify` - `PROXY`
 
 ---
 

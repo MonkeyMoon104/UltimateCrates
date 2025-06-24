@@ -9,7 +9,7 @@ db_central:
 
 events:
   enabled: true #Funzione generale principale per eventi
-  delay: 1 #durata degli eventi e durata di pausa tra un evento e l'altro (in minuti)
+  delay: 5 #durata degli eventi e durata di pausa tra un evento e l'altro (in minuti)
   world: "world" #Nome del mondo dove verranno eseguiti gli eventi
   random_select_event: #Su enabled mettere true altrimenti gli eventi non verranno avviati
     enabled: true
@@ -39,5 +39,5 @@ events:
       increment_amount: 2 #Quante statistiche per ciascuna crate devono venire aumentate
 
 proxy:
-  enabled: false
-  server-name: "server1"
+  enabled: false #Abilita per ottenere le notifiche sincronizzate all'avvio di ogni evento, disabilita per non ricevere nulla (Questa funzione serve solo per le notifiche)
+  server-name: "servername" #Se abiliti il proxy assicurati di inserire il server-name corretto altrimenti verrà mandato il messaggio di notifica ma senza il server giusto infatti i player non potranno spostarsi nel server dove c'è l'evento!

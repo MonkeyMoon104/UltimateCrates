@@ -1,18 +1,18 @@
 messages:
-  no_permission: "&cYou don't have permission to execute this command."
-  player_not_found: "&cPlayer not found."
-  reload_success: "&aUCProxy successfully reloaded."
-  only_op: "&cOnly OPs can execute this command."
-  server_not_found: "&cServer not found."
-  server_textcomponent: "&a[Click to teleport to player]"
-  connect_failed: "&cFailed to connect to server"
+  no_permission: "&cNon hai il permesso per eseguire questo comando."
+  player_not_found: "&cGiocatore non trovato."
+  reload_success: "&aUCProxy ricaricato con successo."
+  only_op: "&cSolo gli OP possono eseguire questo comando."
+  server_not_found: "&cServer non trovato."
+  server_textcomponent: "&a[Clicca per teletrasportarti al giocatore]"
+  connect_failed: "&cConnessione al server fallita"
 
 event_proxy_notify:
-  title: "&eNEW EVENT STARTED"
+  title: "&eNUOVO EVENTO INIZIATO"
   lines:
     - ''
-    - '&7A new event has started'
-    - '&7Event: &e%event%'
-    - '&7End event in: &a%eventEnd%'
+    - '&7È iniziato un nuovo evento'
+    - '&7Evento: &e%event%'
+    - '&7Fine evento tra: &a%eventEnd% minuti'
     - '&7Server: &6%server%'
     - ''
