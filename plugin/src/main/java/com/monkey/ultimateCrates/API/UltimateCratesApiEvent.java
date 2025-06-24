@@ -16,8 +16,8 @@ public class UltimateCratesApiEvent implements UltimateCratesProvider {
     }
 
     @Override
-    public void incrementCrateOpen(String playerName, String crateId) {
-        storage.incrementCrateOpen(playerName, crateId);
+    public void incrementCrateOpen(String playerName, String crateId, int amount) {
+        storage.incrementCrateOpen(playerName, crateId, amount);
     }
 
     @Override

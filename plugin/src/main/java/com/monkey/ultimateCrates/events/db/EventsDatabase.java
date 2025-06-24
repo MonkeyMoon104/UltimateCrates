@@ -65,6 +65,17 @@ public class EventsDatabase {
             )
         """);
 
+            stmt.executeUpdate("""
+            CREATE TABLE IF NOT EXISTS statshunt_active_chest (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                world TEXT NOT NULL,
+                x INTEGER NOT NULL,
+                y INTEGER NOT NULL,
+                z INTEGER NOT NULL,
+                crate_id TEXT NOT NULL
+            )
+            """);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

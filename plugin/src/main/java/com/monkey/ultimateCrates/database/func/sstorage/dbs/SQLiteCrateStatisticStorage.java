@@ -34,13 +34,15 @@ public class SQLiteCrateStatisticStorage implements CrateStatisticStorage {
     }
 
     @Override
-    public void incrementCrateOpen(String playerName, String crateId) {
+    public void incrementCrateOpen(String playerName, String crateId, int amount) {
         try (PreparedStatement stmt = connection.prepareStatement(
-                "INSERT INTO crate_stats (player_name, crate_id, amount_opened) VALUES (?, ?, 1) " +
-                        "ON CONFLICT(player_name, crate_id) DO UPDATE SET amount_opened = amount_opened + 1"
+                "INSERT INTO crate_stats (player_name, crate_id, amount_opened) VALUES (?, ?, ?) " +
+                        "ON CONFLICT(player_name, crate_id) DO UPDATE SET amount_opened = amount_opened + ?"
         )) {
             stmt.setString(1, playerName);
             stmt.setString(2, crateId);
+            stmt.setInt(3, amount);
+            stmt.setInt(4, amount);
             stmt.executeUpdate();
         } catch (SQLException e) {
             logger.warning("Errore incrementando crate open: " + e.getMessage());
@@ -89,13 +91,16 @@ public class SQLiteCrateStatisticStorage implements CrateStatisticStorage {
     }
 
     @Override
-    public boolean checkRewardAndReset(String playerName, String crateId, int rewardEvery) {
+    public boolean checkRewardAndReset(String playerName, String crateId, int rewardEvery, int amountAdded) {
         try (PreparedStatement stmtInsertOrUpdate = connection.prepareStatement(
-                "INSERT INTO crate_stats (player_name, crate_id, amount_opened, reward_counter) VALUES (?, ?, 0, 1) " +
-                        "ON CONFLICT(player_name, crate_id) DO UPDATE SET reward_counter = reward_counter + 1"
+                "INSERT INTO crate_stats (player_name, crate_id, amount_opened, reward_counter) " +
+                        "VALUES (?, ?, 0, ?) " +
+                        "ON CONFLICT(player_name, crate_id) DO UPDATE SET reward_counter = reward_counter + ?"
         )) {
             stmtInsertOrUpdate.setString(1, playerName);
             stmtInsertOrUpdate.setString(2, crateId);
+            stmtInsertOrUpdate.setInt(3, amountAdded);
+            stmtInsertOrUpdate.setInt(4, amountAdded);
             stmtInsertOrUpdate.executeUpdate();
 
             try (PreparedStatement stmtSelect = connection.prepareStatement(
@@ -108,11 +113,13 @@ public class SQLiteCrateStatisticStorage implements CrateStatisticStorage {
                     if (rs.next()) {
                         int count = rs.getInt("reward_counter");
                         if (count >= rewardEvery) {
+                            int newCounter = count - rewardEvery;
                             try (PreparedStatement stmtReset = connection.prepareStatement(
-                                    "UPDATE crate_stats SET reward_counter = 0 WHERE player_name = ? AND crate_id = ?"
+                                    "UPDATE crate_stats SET reward_counter = ? WHERE player_name = ? AND crate_id = ?"
                             )) {
-                                stmtReset.setString(1, playerName);
-                                stmtReset.setString(2, crateId);
+                                stmtReset.setInt(1, newCounter);
+                                stmtReset.setString(2, playerName);
+                                stmtReset.setString(3, crateId);
                                 stmtReset.executeUpdate();
                             }
                             return true;

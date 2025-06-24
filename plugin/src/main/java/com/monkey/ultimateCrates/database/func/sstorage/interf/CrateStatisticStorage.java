@@ -8,7 +8,7 @@ public interface CrateStatisticStorage {
 
     void createTable();
 
-    void incrementCrateOpen(String playerName, String crateId);
+    void incrementCrateOpen(String playerName, String crateId, int amount);
 
     int getCrateOpens(String playerName, String crateId);
 
@@ -18,5 +18,5 @@ public interface CrateStatisticStorage {
 
     void resetAllStats();
 
-    boolean checkRewardAndReset(String playerName, String crateId, int rewardEvery);
+    boolean checkRewardAndReset(String playerName, String crateId, int rewardEvery, int amountAdded);
 }

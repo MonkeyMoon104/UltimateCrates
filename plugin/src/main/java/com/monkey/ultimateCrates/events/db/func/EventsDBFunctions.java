@@ -62,6 +62,31 @@ public class EventsDBFunctions {
         }
     }
 
+    public void saveStatsHuntChest(String world, int x, int y, int z, String crateId) {
+        String sql = "INSERT INTO statshunt_active_chest (world, x, y, z, crate_id) VALUES (?, ?, ?, ?, ?)";
+
+        try (PreparedStatement ps = database.getConnection().prepareStatement(sql)) {
+            ps.setString(1, world);
+            ps.setInt(2, x);
+            ps.setInt(3, y);
+            ps.setInt(4, z);
+            ps.setString(5, crateId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void clearStatsHuntChests() {
+        String sql = "DELETE FROM statshunt_active_chest";
+        try (PreparedStatement ps = database.getConnection().prepareStatement(sql)) {
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     public static class KeyHuntChest {
         private final String world;
@@ -89,6 +114,26 @@ public class EventsDBFunctions {
         private final String crateId;
 
         public TreasureHuntChest(String world, int x, int y, int z, String crateId) {
+            this.world = world;
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.crateId = crateId;
+        }
+
+        public String getWorld() { return world; }
+        public int getX() { return x; }
+        public int getY() { return y; }
+        public int getZ() { return z; }
+        public String getCrateId() { return crateId; }
+    }
+
+    public static class StatsHuntChest {
+        private final String world;
+        private final int x, y, z;
+        private final String crateId;
+
+        public StatsHuntChest(String world, int x, int y, int z, String crateId) {
             this.world = world;
             this.x = x;
             this.y = y;

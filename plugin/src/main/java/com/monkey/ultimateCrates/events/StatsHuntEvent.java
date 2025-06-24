@@ -4,19 +4,20 @@ import org.bukkit.Material;
 import java.util.List;
 
 public class StatsHuntEvent {
-    private final Material block;
     private final List<String> crateIds;
+    private final int amount;
 
-    public StatsHuntEvent(Material block, List<String> crateIds) {
-        this.block = block;
+    public StatsHuntEvent(List<String> crateIds, int amount) {
         this.crateIds = crateIds;
+        this.amount = amount;
     }
 
-    public Material getBlock() {
-        return block;
-    }
 
     public List<String> getCrateIds() {
         return crateIds;
+    }
+
+    public int getAmount() {
+        return amount;
     }
 }

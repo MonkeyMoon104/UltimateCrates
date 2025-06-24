@@ -25,6 +25,7 @@ public class CrateEventsManager {
     private final Map<String, StatsHuntEvent> statsHunts = new HashMap<>();
     private BukkitTask eventTask;
 
+
     public CrateEventsManager(FileConfiguration config) {
         ConfigurationSection section = config.getConfigurationSection("events");
         if (section == null) {
@@ -32,6 +33,8 @@ public class CrateEventsManager {
             this.randomSelectEnabled = false;
             this.delayMinutes = 0;
             this.selectedActiveEvents = Collections.emptyList();
+            ConfigurationSection listSection = section.getConfigurationSection("list");
+            this.eventsListSection = listSection;
             return;
         }
 
@@ -59,23 +62,18 @@ public class CrateEventsManager {
 
                     case "key_hunt":
                         String keyName = eventSection.getString("key_name");
-                        int amount = eventSection.getInt("amount", 1);
+                        int keyamount = eventSection.getInt("amount", 1);
                         if (keyName != null) {
-                            keyHunts.put(key, new KeyHuntEvent(keyName, amount));
+                            keyHunts.put(key, new KeyHuntEvent(keyName, keyamount));
                         }
                         break;
 
                     case "stats_hunt":
-                        String materialName = eventSection.getString("block");
                         List<String> crateIds = eventSection.getStringList("stats_increment");
+                        int statsamount = eventSection.getInt("increment_amount");
 
-                        Material block = null;
-                        try {
-                            block = Material.valueOf(materialName);
-                        } catch (Exception ignored) {}
-
-                        if (block != null && !crateIds.isEmpty()) {
-                            statsHunts.put(key, new StatsHuntEvent(block, crateIds));
+                        if (!crateIds.isEmpty()) {
+                            statsHunts.put(key, new StatsHuntEvent(crateIds, statsamount));
                         }
                         break;
                 }
@@ -109,6 +107,9 @@ public class CrateEventsManager {
                 break;
             case "treasure_hunt":
                 getTreasureHuntEvent().ifPresent(event -> TreasureHuntExecutor.start(event, delayMinutes));
+                break;
+            case "stats_hunt":
+                getStatsHuntEvent().ifPresent(event -> StatsHuntExecutor.start(event, delayMinutes));
                 break;
         }
     }
@@ -149,6 +150,14 @@ public class CrateEventsManager {
             eventTask.cancel();
             eventTask = null;
         }
+    }
+
+    public Optional<String> getPlayerAnimationForEvent(String eventName) {
+        if (eventName == null || eventName.isEmpty()) return Optional.empty();
+
+        if (eventsListSection == null) return Optional.empty();
+
+        return Optional.ofNullable(eventsListSection.getString(eventName + ".player_animation"));
     }
 
 }

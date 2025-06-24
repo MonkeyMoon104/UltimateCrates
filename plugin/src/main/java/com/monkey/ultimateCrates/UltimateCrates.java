@@ -15,6 +15,7 @@ import com.monkey.ultimateCrates.events.CrateEventsManager;
 import com.monkey.ultimateCrates.events.KeyHuntEvent;
 import com.monkey.ultimateCrates.events.db.func.EventsDBFunctions;
 import com.monkey.ultimateCrates.events.handler.KeyHuntExecutor;
+import com.monkey.ultimateCrates.events.handler.StatsHuntExecutor;
 import com.monkey.ultimateCrates.events.handler.TreasureHuntExecutor;
 import com.monkey.ultimateCrates.placeholder.UCPlaceholder;
 import com.monkey.ultimateCrates.setup.CrateAnimations;
@@ -180,7 +181,10 @@ public final class UltimateCrates extends JavaPlugin {
         if (KeyHuntExecutor.isRunning()) {
             KeyHuntExecutor.end(false);
         }
-        //StatsHuntExecutor.end(false);
+
+        if (StatsHuntExecutor.isRunning()) {
+            StatsHuntExecutor.end(false);
+        }
     }
 
 

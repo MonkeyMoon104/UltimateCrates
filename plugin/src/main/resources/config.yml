@@ -9,16 +9,16 @@ db_central:
 
 events:
   enabled: true
-  delay: 5 #durata degli eventi e durata di pausa tra un evento e l'altro (in minuti)
+  delay: 1 #durata degli eventi e durata di pausa tra un evento e l'altro (in minuti)
   world: "world"
   random_select_event:
     enabled: true
     selected_active_events: #Nome degli eventi presenti in list, tutti i nomi degli eventi che non sono presenti non verranno attivati e scelti
-      - treasure_hunt
-      - key_hunt
+      - stats_hunt
   list:
     treasure_hunt:
       crate_id: "event" #ID della crate presente in crates.yml
+      player_animation: "flame_ring" #Animazione che si avvia sul player quando esso apre la crate
       pos: #Lista di posizioni "sicure" per far si che il plugin non mandi il server in sovraccarico cercando posizioni sicure, per posizioni sicure si intendono queste condizoni: "sopra un blocco con un area di spazio libera 3x3" (va bene anche sotto terra basta che rispetti le condizioni)
         - "19, 65, -58"
         - "15, 65, -59"
@@ -26,9 +26,12 @@ events:
 
     key_hunt:
       key_name: "common" #ID della crate presente in crates.yml (otterrà automaticamente la chiave corrispondente)
+      player_animation: "bubble_up"
       amount: 2 #Numero di chiavi che l'evento dovrà dare al player vincitore
 
     stats_hunt:
-      block: "material"
+      player_animation: "sparkle"
       stats_increment:
-        - "crateid"
+        - "common"
+        - "legendary"
+      increment_amount: 2

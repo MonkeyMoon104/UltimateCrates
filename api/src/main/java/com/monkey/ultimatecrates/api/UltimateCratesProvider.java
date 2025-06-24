@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface UltimateCratesProvider {
 
-    void incrementCrateOpen(String playerName, String crateId);
+    void incrementCrateOpen(String playerName, String crateId, int amount);
 
     int getCrateOpens(String playerName, String crateId);
 
