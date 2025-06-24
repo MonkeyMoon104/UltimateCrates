@@ -1,6 +1,6 @@
 name: UltimateCrates
 version: ${project.version}
-main: com.monkey.ultimateCrates.UltimateCrates
+main: com.monkey.ultimateCrates.bukkit.UltimateCrates
 api-version: '1.21'
 authors: [ MonkeyMoon104 ]
 description: Plugin crates

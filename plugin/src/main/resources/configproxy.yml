@@ -1,0 +1,18 @@
+messages:
+  no_permission: "&cYou don't have permission to execute this command."
+  player_not_found: "&cPlayer not found."
+  reload_success: "&aUltimateReportProxy successfully reloaded."
+  only_op: "&cOnly OPs can execute this command."
+  server_not_found: "&cServer not found."
+  server_textcomponent: "&a[Click to teleport to player]"
+  connect_failed: "&cFailed to connect to server"
+
+event_proxy_notify:
+  title: "&eNEW EVENT STARTED"
+  lines:
+    - ''
+    - '&7A new event has started'
+    - '&7Event: &e%event%'
+    - '&7End event in: &a%eventEnd%'
+    - '&7Server: &6%server%'
+    - ''
