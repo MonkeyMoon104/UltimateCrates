@@ -1,0 +1,20 @@
+name: UltimateCrates
+version: 1.1.8
+main: com.monkey.ultimateCrates.proxy.bungeecord.UCBungee
+author: MonkeyMoon104
+description: Proxy Crates
+
+commands:
+  ucpreload:
+    description: Reload plugin config
+    usage: /ucpreload
+
+
+permissions:
+  ucproxy.event.notify:
+    description: Allow to see the event notification
+    default: true
+
+  ucproxy.reload:
+    description: Allow to reload plugin config
+    default: op

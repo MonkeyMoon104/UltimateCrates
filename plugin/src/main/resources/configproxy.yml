@@ -1,7 +1,7 @@
 messages:
   no_permission: "&cYou don't have permission to execute this command."
   player_not_found: "&cPlayer not found."
-  reload_success: "&aUltimateReportProxy successfully reloaded."
+  reload_success: "&aUCProxy successfully reloaded."
   only_op: "&cOnly OPs can execute this command."
   server_not_found: "&cServer not found."
   server_textcomponent: "&a[Click to teleport to player]"
