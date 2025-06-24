@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Minecraft-1.21-blue?style=for-the-badge">
   <img src="https://img.shields.io/badge/API-Paper-yellow?style=for-the-badge">
-  <img src="https://img.shields.io/badge/Version-1.1.6-brightgreen?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Version-1.1.7-brightgreen?style=for-the-badge">
   <a href="https://github.com/MonkeyMoon104/UltimateCrates/releases/latest">
     <img src="https://img.shields.io/badge/Download-UltimateCrates-blueviolet?style=for-the-badge">
   </a>
