@@ -26,6 +26,7 @@
 * 💰 **Vault Integration** for economy and key purchasing
 * 🧼 **MySQL or SQLite Database Support**
 * ♻️ **Reload Command** – no need to restart your server!
+* 📅 **Events System** with 3 different type events
 
 ---
 
@@ -46,21 +47,56 @@ Make sure these dependencies are installed:
 - [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/)
 - [LuckPerms](https://luckperms.net/)
 - [Vault](https://www.spigotmc.org/resources/vault.34315/)
+- [WorldGuard](https://dev.bukkit.org/projects/worldguard)
+- [WorldEdit](https://dev.bukkit.org/projects/worldedit)
 
 ---
 
 ## 🧩 Configuration
 
-### `config.yml`
+### `config.yml (db function)`
 
 ```yaml
 db_central:
-  type: "sqlite"   # sqlite or mysql
+  type: "sqlite"   # Scegli tra "sqlite" o "mysql" (se sqlite bypassa la configurazione host, port, etc.)
   host: "localhost"
   port: 3306
   database: "ultimatecrates"
   username: "root"
   password: "password"
+````
+
+```yaml
+events:
+  enabled: true #Funzione generale principale per eventi
+  delay: 5 #durata degli eventi e durata di pausa tra un evento e l'altro (in minuti)
+  world: "world" #Nome del mondo dove verranno eseguiti gli eventi
+  random_select_event: #Su enabled mettere true altrimenti gli eventi non verranno avviati
+    enabled: true
+    selected_active_events: #Nome degli eventi presenti in list, tutti i nomi degli eventi che non sono presenti non verranno attivati e scelti
+      - stats_hunt
+  list:
+    treasure_hunt:
+      crate_id: "event" #ID della crate presente in crates.yml
+      #player_animation: null #Non inserire l'animazione nell'evento treasure_hunt, questa animazione devi impostarla nel file crates.yml con la crate collegata
+      pos: #Lista di posizioni "sicure" per far si che il plugin non mandi il server in sovraccarico cercando posizioni sicure, per posizioni sicure si intendono queste condizoni: "sopra un blocco con un area di spazio libera 3x3" (va bene anche sotto terra basta che rispetti le condizioni)
+        - "1, 2, 3"
+        - "4, 5, 6"
+        - "7, 8, 9"
+
+    key_hunt:
+      key_name: "common" #ID della crate presente in crates.yml (otterrà automaticamente la chiave corrispondente)
+      player_animation: "bubble_up" #Animazione che viene avviata sul player quando trova la chest evento
+      open_animation: "multi_bolt" #Animazione che viene avviata sulla chest dell'evento quando viene reclamata
+      amount: 2 #Numero di chiavi che l'evento dovrà dare al player vincitore
+
+    stats_hunt:
+      player_animation: "sparkle" #Animazione che viene avviata sul player quando trova la chest evento
+      open_animation: "totem_explosion" #Animazione che viene avviata sulla chest dell'evento quando viene reclamata
+      stats_increment: #Lista di ID delle crate per la quali le statistiche devono venire aumentate
+        - "common"
+        - "legendary"
+      increment_amount: 2 #Quante statistiche per ciascuna crate devono venire aumentate
 ````
 
 ### `crates.yml`
@@ -130,6 +166,25 @@ crates:
   * `uc.preview.see`
   * `uc.top.use`
   * `uc.buykey.use`
+  * `uc.crateevent.open`
+
+---
+
+## 📅 Events System
+
+UltimateCrates introduces an innovative **automated events system**, perfect for servers with active players!
+
+### 🔄 Modalità disponibili:
+
+| Event          | Description                                                               |
+|----------------|---------------------------------------------------------------------------|
+| `treasure_hunt` | Spawns an "event" crate that can be opened only once by a player          |
+| `key_hunt`     | Spawns a chest that, when found, gives specific keys, openable only once by a player              |
+| `stats_hunt`   | Spawns a chest that increases the player's stats on certain crates |
+
+## 🎬 Small ShowCase Event
+> ![Showcase](images/show1.gif)
+> ![Showcase](images/show2.gif)
 
 ---
 
@@ -178,15 +233,15 @@ UltimateCratesProvider api = UltimateCratesAPI.get();
 ```java
 public interface UltimateCratesProvider {
 
-    void incrementCrateOpen(String playerName, String crateId);
+  void incrementCrateOpen(String playerName, String crateId, int amount);
 
-    int getCrateOpens(String playerName, String crateId);
+  int getCrateOpens(String playerName, String crateId);
 
-    List<LeaderboardEntry> getLeaderboard(String crateId, int page, int rowPerPage);
+  List<LeaderboardEntry> getLeaderboard(String crateId, int page, int rowPerPage);
 
-    void resetPlayerStats(String playerName);
+  void resetPlayerStats(String playerName);
 
-    void resetAllStats();
+  void resetAllStats();
 }
 ```
 
@@ -283,7 +338,5 @@ Includes a powerful tracking system:
   ❤️‍🔥
 
 </p>
-
-
 
 ---

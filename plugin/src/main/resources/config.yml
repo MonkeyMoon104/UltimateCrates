@@ -9,7 +9,7 @@ db_central:
 
 events:
   enabled: true #Funzione generale principale per eventi
-  delay: 1 #durata degli eventi e durata di pausa tra un evento e l'altro (in minuti)
+  delay: 5 #durata degli eventi e durata di pausa tra un evento e l'altro (in minuti)
   world: "world" #Nome del mondo dove verranno eseguiti gli eventi
   random_select_event: #Su enabled mettere true altrimenti gli eventi non verranno avviati
     enabled: true
