@@ -4,6 +4,7 @@ import com.monkey.ultimateCrates.UltimateCrates;
 import com.monkey.ultimateCrates.crates.model.Crate;
 import com.monkey.ultimateCrates.events.StatsHuntEvent;
 import com.monkey.ultimateCrates.events.handler.StatsHuntExecutor;
+import com.monkey.ultimateCrates.util.AnimationUtils;
 import com.monkey.ultimateCrates.util.KeyUtils;
 import de.tr7zw.nbtapi.NBTBlock;
 import org.bukkit.ChatColor;
@@ -64,6 +65,8 @@ public class StatsHuntListener implements Listener {
 
         player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                 "&6[UltimateCrates] &aHai aperto una StatChest e ottenuto le stats esegui /cr stats per tenere traccia"));
+
+        AnimationUtils.playEventAnimations(UltimateCrates.getInstance(), player, "stats_hunt");
 
         StatsHuntExecutor.end(true);
     }

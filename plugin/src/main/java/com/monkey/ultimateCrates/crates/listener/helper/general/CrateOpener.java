@@ -7,6 +7,7 @@ import com.monkey.ultimateCrates.crates.model.CratePrize;
 import com.monkey.ultimateCrates.crates.util.CratePrizeSelector;
 import com.monkey.ultimateCrates.database.func.vkeys.interf.VirtualKeyStorage;
 import com.monkey.ultimateCrates.events.handler.TreasureHuntExecutor;
+import com.monkey.ultimateCrates.util.AnimationUtils;
 import com.monkey.ultimateCrates.util.KeyUtils;
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Material;
@@ -34,13 +35,13 @@ public class CrateOpener {
             if (!hasValidPhysicalKey(handItem, crate, player)) return;
 
             consumePhysicalKey(handItem, player);
-            crateWinPrize(player, crate);
+            crateWinPrize(player, crate, false, null);
 
         } else if (crate.getKeyType() == Crate.KeyType.VIRTUAL) {
             if (!hasValidVirtualKey(handItem, crate, player)) return;
 
             consumeVirtualKey(player, crate);
-            crateWinPrize(player, crate);
+            crateWinPrize(player, crate, false, null);
         }
     }
 
@@ -56,13 +57,13 @@ public class CrateOpener {
             if (!hasValidPhysicalKey(handItem, crate, player)) return;
 
             consumePhysicalKey(handItem, player);
-            crateWinPrize(player, crate);
+            crateWinPrize(player, crate, true, "treasure_hunt");
 
         } else if (crate.getKeyType() == Crate.KeyType.VIRTUAL) {
             if (!hasValidVirtualKey(handItem, crate, player)) return;
 
             consumeVirtualKey(player, crate);
-            crateWinPrize(player, crate);
+            crateWinPrize(player, crate, true, "treasure_hunt");
         }
 
         TreasureHuntExecutor.end(true);
@@ -118,7 +119,7 @@ public class CrateOpener {
         storage.takeKeys(player.getName(), crate.getId(), 1);
     }
 
-    private void crateWinPrize(Player player, Crate crate) {
+    private void crateWinPrize(Player player, Crate crate, boolean event, String eventName) {
         var prizes = crate.getPrizes();
         if (prizes.isEmpty()) {
             player.sendMessage(plugin.getMessagesManager().getMessage("messages.crate.no_prizes"));
@@ -141,14 +142,10 @@ public class CrateOpener {
 
         player.sendMessage(plugin.getMessagesManager().getMessage("messages.crate.win_prize", prizeName));
 
-        var animationManager = plugin.getAnimationManager();
-        var location = player.getLocation();
-
-        for (String animationName : crate.getAnimationTemplates()) {
-            animationManager.getAnimation(animationName).ifPresentOrElse(
-                    animation -> animation.play(player, location),
-                    () -> plugin.getLogger().warning("Animazione non trovata: " + animationName + " nella crate: " + crate.getId())
-            );
+        if (!event) {
+            AnimationUtils.playCrateAnimations(UltimateCrates.getInstance(), player, crate);
+        } else {
+            AnimationUtils.playEventAnimations(UltimateCrates.getInstance(), player, eventName);
         }
         plugin.getDatabaseManager().getCrateStatisticStorage().incrementCrateOpen(player.getName(), crate.getId(), 1);
 

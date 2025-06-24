@@ -24,6 +24,7 @@ public class CrateEventsManager {
     private final Map<String, KeyHuntEvent> keyHunts = new HashMap<>();
     private final Map<String, StatsHuntEvent> statsHunts = new HashMap<>();
     private BukkitTask eventTask;
+    private final ConfigurationSection eventsListSection;
 
 
     public CrateEventsManager(FileConfiguration config) {
@@ -33,8 +34,7 @@ public class CrateEventsManager {
             this.randomSelectEnabled = false;
             this.delayMinutes = 0;
             this.selectedActiveEvents = Collections.emptyList();
-            ConfigurationSection listSection = section.getConfigurationSection("list");
-            this.eventsListSection = listSection;
+            this.eventsListSection = null;
             return;
         }
 
@@ -47,6 +47,7 @@ public class CrateEventsManager {
                 : Collections.emptyList();
 
         ConfigurationSection listSection = section.getConfigurationSection("list");
+        this.eventsListSection = listSection;
         if (listSection != null) {
             for (String key : listSection.getKeys(false)) {
                 ConfigurationSection eventSection = listSection.getConfigurationSection(key);

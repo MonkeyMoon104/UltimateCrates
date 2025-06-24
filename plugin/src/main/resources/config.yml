@@ -8,30 +8,30 @@ db_central:
 
 
 events:
-  enabled: true
+  enabled: true #Funzione generale principale per eventi
   delay: 1 #durata degli eventi e durata di pausa tra un evento e l'altro (in minuti)
-  world: "world"
-  random_select_event:
+  world: "world" #Nome del mondo dove verranno eseguiti gli eventi
+  random_select_event: #Su enabled mettere true altrimenti gli eventi non verranno avviati
     enabled: true
     selected_active_events: #Nome degli eventi presenti in list, tutti i nomi degli eventi che non sono presenti non verranno attivati e scelti
       - stats_hunt
   list:
     treasure_hunt:
       crate_id: "event" #ID della crate presente in crates.yml
-      player_animation: "flame_ring" #Animazione che si avvia sul player quando esso apre la crate
+      #player_animation: null #Non inserire l'animazione nell'evento treasure_hunt, questa animazione devi impostarla nel file crates.yml con la crate collegata
       pos: #Lista di posizioni "sicure" per far si che il plugin non mandi il server in sovraccarico cercando posizioni sicure, per posizioni sicure si intendono queste condizoni: "sopra un blocco con un area di spazio libera 3x3" (va bene anche sotto terra basta che rispetti le condizioni)
-        - "19, 65, -58"
-        - "15, 65, -59"
-        - "17, 65, -55"
+        - "1, 2, 3"
+        - "4, 5, 6"
+        - "7, 8, 9"
 
     key_hunt:
       key_name: "common" #ID della crate presente in crates.yml (otterrà automaticamente la chiave corrispondente)
-      player_animation: "bubble_up"
+      player_animation: "bubble_up" #Animazione che viene avviata sul player quando trova la chest evento
       amount: 2 #Numero di chiavi che l'evento dovrà dare al player vincitore
 
     stats_hunt:
-      player_animation: "sparkle"
-      stats_increment:
+      player_animation: "sparkle" #Animazione che viene avviata sul player quando trova la chest evento
+      stats_increment: #Lista di ID delle crate per la quali le statistiche devono venire aumentate
         - "common"
         - "legendary"
-      increment_amount: 2
+      increment_amount: 2 #Quante statistiche per ciascuna crate devono venire aumentate

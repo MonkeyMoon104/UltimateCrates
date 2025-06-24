@@ -3,6 +3,7 @@ package com.monkey.ultimateCrates.events.listener;
 import com.monkey.ultimateCrates.UltimateCrates;
 import com.monkey.ultimateCrates.crates.model.Crate;
 import com.monkey.ultimateCrates.events.handler.KeyHuntExecutor;
+import com.monkey.ultimateCrates.util.AnimationUtils;
 import com.monkey.ultimateCrates.util.KeyUtils;
 import de.tr7zw.nbtapi.NBTBlock;
 import org.bukkit.ChatColor;
@@ -55,6 +56,8 @@ public class KeyHuntListener implements Listener {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     "&6[UltimateCrates] &aHai trovato la chiave misteriosa! " + crate.getKeyName()));
         }
+
+        AnimationUtils.playEventAnimations(UltimateCrates.getInstance(), player, "key_hunt");
 
         KeyHuntExecutor.end(true);
     }
