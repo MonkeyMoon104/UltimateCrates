@@ -48,8 +48,8 @@ crates:
         cost: 500.0
     hologram:
       - "&6&lLegendary Crate&r"
-      - "&5Sei fortunato!"
-      - "&dQuesta crate contiene premi epici!"
+      - "&eSei fortunato!"
+      - "&eQuesta crate contiene premi epici!"
     reward:
       every: 10
       animation:
@@ -75,3 +75,49 @@ crates:
       - type: EMERALD
         amount: 10
         chance: 80.0
+
+  event:
+    name: "&5Event Crate"
+    keys:
+      type: physic
+      enchanted: true
+      name: "&5Event Crate Key"
+      canbuy:
+        enabled: false
+        cost: 5000.0
+    hologram:
+      - "&5&lEvent Crate&r"
+      - "&dSei Molto fortunato!"
+      - "&dQuesta crate contiene premi fantastici!"
+    reward:
+      every: 20
+      animation:
+        enabled: true
+        repeat: 15
+      prizeconf:
+        item: NETHERITE_INGOT
+        amount: 64
+    animations:
+      - "flame_ring"
+    particle_effect:
+      enabled: true
+      effect: "soul_fire_flame"
+      style: "celebration"
+    prizes:
+      - type: BEACON
+        amount: 1
+        name: "&6SuperFaro"
+        lore:
+          - "&7Raggio immenso"
+          - "&eRarissimo"
+        chance: 10.0
+      - type: EMERALD
+        amount: 32
+        chance: 85.0
+      - type: DIAMOND_SWORD
+        amount: 1
+        name: "&bSpada Fulminante"
+        lore:
+          - "&bEvoca fulimini"
+          - "&5Ultra rara"
+        chance: 5.0

@@ -62,6 +62,9 @@ permissions:
       uc.crate.open:
         description: Permette di aprire le crates
         default: true
+      uc.crateevent.open:
+        description: Permette di aprire le crates generate dall'evento
+        default: true
       uc.preview.see:
         description: Permette di vedere l'anteprima delle crates
         default: true

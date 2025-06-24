@@ -107,6 +107,9 @@ public class CrateEventsManager {
             case "key_hunt":
                 getKeyHuntEvent().ifPresent(event -> KeyHuntExecutor.start(event, delayMinutes));
                 break;
+            case "treasure_hunt":
+                getTreasureHuntEvent().ifPresent(event -> TreasureHuntExecutor.start(event, delayMinutes));
+                break;
         }
     }
 

@@ -18,7 +18,6 @@ public class KeyHuntExecutor {
     private static Crate currentKeyHuntCrate;
     private static boolean running = false;
 
-    private static final EventsDBFunctions dbFunctions = new EventsDBFunctions();
     private static KeyHuntEvent currentKeyHuntEvent;
 
 
@@ -62,7 +61,7 @@ public class KeyHuntExecutor {
         running = true;
         currentKeyHuntEvent = event;
 
-        dbFunctions.saveKeyHuntChest(world.getName(),
+        plugin.getEventsDatabaseFunctions().saveKeyHuntChest(world.getName(),
                 location.getBlockX(), location.getBlockY(), location.getBlockZ(),
                 crate.getId());
 
@@ -104,7 +103,7 @@ public class KeyHuntExecutor {
         currentKeyHuntChestLocation = null;
         currentKeyHuntCrate = null;
         currentKeyHuntEvent = null;
-        dbFunctions.clearKeyHuntChest();
+        UltimateCrates.getInstance().getEventsDatabaseFunctions().clearKeyHuntChest();
     }
 
     public static Location getCurrentKeyHuntChestLocation() {

@@ -7,7 +7,10 @@ import org.bukkit.World;
 import org.bukkit.WorldBorder;
 import org.bukkit.block.Block;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class EventLocationUtils {
@@ -42,5 +45,33 @@ public class EventLocationUtils {
             default:
                 return false;
         }
+    }
+
+    public static List<Location> getSafePositionsFromConfig() {
+        var config = UltimateCrates.getInstance().getConfigManager().getMainConfig();
+        List<Location> locations = new ArrayList<>();
+        World world = getConfiguredWorld();
+
+        List<String> posList = config.getStringList("events.list.treasure_hunt.pos");
+        for (String posString : posList) {
+            String[] parts = posString.split(",");
+            if (parts.length != 3) continue;
+
+            try {
+                double x = Double.parseDouble(parts[0].trim());
+                double y = Double.parseDouble(parts[1].trim());
+                double z = Double.parseDouble(parts[2].trim());
+                Location loc = new Location(world, x, y, z);
+                locations.add(loc);
+            } catch (NumberFormatException ignored) {}
+        }
+
+        return locations;
+    }
+
+    public static Location getRandomSafePositionFromConfig() {
+        List<Location> safePositions = getSafePositionsFromConfig();
+        if (safePositions.isEmpty()) return null;
+        return safePositions.get(RANDOM.nextInt(safePositions.size()));
     }
 }

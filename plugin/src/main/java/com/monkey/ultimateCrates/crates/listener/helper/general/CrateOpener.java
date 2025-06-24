@@ -6,6 +6,7 @@ import com.monkey.ultimateCrates.crates.model.Crate;
 import com.monkey.ultimateCrates.crates.model.CratePrize;
 import com.monkey.ultimateCrates.crates.util.CratePrizeSelector;
 import com.monkey.ultimateCrates.database.func.vkeys.interf.VirtualKeyStorage;
+import com.monkey.ultimateCrates.events.handler.TreasureHuntExecutor;
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -41,6 +42,31 @@ public class CrateOpener {
             crateWinPrize(player, crate);
         }
     }
+
+    public void tryOpenEventCrate(Player player, String crateId) {
+        Optional<Crate> crateOpt = plugin.getCrateManager().getCrate(crateId);
+        if (crateOpt.isEmpty()) return;
+
+        Crate crate = crateOpt.get();
+
+        ItemStack handItem = player.getInventory().getItemInMainHand();
+
+        if (crate.getKeyType() == Crate.KeyType.PHYSIC) {
+            if (!hasValidPhysicalKey(handItem, crate, player)) return;
+
+            consumePhysicalKey(handItem, player);
+            crateWinPrize(player, crate);
+
+        } else if (crate.getKeyType() == Crate.KeyType.VIRTUAL) {
+            if (!hasValidVirtualKey(handItem, crate, player)) return;
+
+            consumeVirtualKey(player, crate);
+            crateWinPrize(player, crate);
+        }
+
+        TreasureHuntExecutor.end(true);
+    }
+
 
     private boolean hasValidPhysicalKey(ItemStack handItem, Crate crate, Player player) {
         if (handItem == null || handItem.getType() == Material.AIR) {

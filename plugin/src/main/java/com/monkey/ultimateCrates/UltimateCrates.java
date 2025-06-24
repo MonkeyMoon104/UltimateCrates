@@ -13,7 +13,9 @@ import com.monkey.ultimateCrates.crates.particles.manager.ParticlesManager;
 import com.monkey.ultimateCrates.database.manager.DatabaseManager;
 import com.monkey.ultimateCrates.events.CrateEventsManager;
 import com.monkey.ultimateCrates.events.KeyHuntEvent;
+import com.monkey.ultimateCrates.events.db.func.EventsDBFunctions;
 import com.monkey.ultimateCrates.events.handler.KeyHuntExecutor;
+import com.monkey.ultimateCrates.events.handler.TreasureHuntExecutor;
 import com.monkey.ultimateCrates.placeholder.UCPlaceholder;
 import com.monkey.ultimateCrates.setup.CrateAnimations;
 import com.monkey.ultimateCrates.setup.CrateListeners;
@@ -45,6 +47,7 @@ public final class UltimateCrates extends JavaPlugin {
     private MessagesManager messagesManager;
     private Economy economy;
     private CrateEventsManager eventsManager;
+    private EventsDBFunctions eventsDatabaseFunctions;
 
     @Override
     public void onEnable() {
@@ -88,6 +91,8 @@ public final class UltimateCrates extends JavaPlugin {
 
         crateHologramManager = new CrateHologramManager();
         cratePreviewManager = new CratePreviewManager();
+
+        eventsDatabaseFunctions = new EventsDBFunctions();
 
         Bukkit.getScheduler().runTaskLater(this, () -> {
             eventsManager = new CrateEventsManager(configManager.getMainConfig());
@@ -168,8 +173,13 @@ public final class UltimateCrates extends JavaPlugin {
             eventsManager.cancelScheduledEvent();
         }
 
-        KeyHuntExecutor.end(false);
-        //TreasureHuntExecutor.end(false);
+        if (TreasureHuntExecutor.isRunning()) {
+            TreasureHuntExecutor.end(false);
+        }
+
+        if (KeyHuntExecutor.isRunning()) {
+            KeyHuntExecutor.end(false);
+        }
         //StatsHuntExecutor.end(false);
     }
 
@@ -224,6 +234,10 @@ public final class UltimateCrates extends JavaPlugin {
 
     public CrateEventsManager getCrateEventsManager() {
         return eventsManager;
+    }
+
+    public EventsDBFunctions getEventsDatabaseFunctions() {
+        return eventsDatabaseFunctions;
     }
 
 }
