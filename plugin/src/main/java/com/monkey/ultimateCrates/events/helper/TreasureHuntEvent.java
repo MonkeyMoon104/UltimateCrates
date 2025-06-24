@@ -1,4 +1,4 @@
-package com.monkey.ultimateCrates.events;
+package com.monkey.ultimateCrates.events.helper;
 
 public class TreasureHuntEvent {
     private final String crateId;

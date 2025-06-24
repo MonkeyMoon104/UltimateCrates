@@ -47,17 +47,19 @@ public class KeyHuntListener implements Listener {
         clickedBlock.setType(Material.AIR);
 
         int amount = KeyHuntExecutor.getCurrentKeyHuntEvent().getAmount();
+        UltimateCrates plugin = UltimateCrates.getInstance();
+
         if (crate.getKeyType() == Crate.KeyType.PHYSIC) {
             player.getInventory().addItem(KeyUtils.createPhysicalKey(crate, amount));
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    "&6[UltimateCrates] &aHai trovato la chiave misteriosa! " + crate.getKeyName()));
         } else if (crate.getKeyType() == Crate.KeyType.VIRTUAL) {
-            UltimateCrates.getInstance().getDatabaseManager().getVirtualKeyStorage().giveKeys(player.getName(), crate.getId(), amount);
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    "&6[UltimateCrates] &aHai trovato la chiave misteriosa! " + crate.getKeyName()));
+            plugin.getDatabaseManager().getVirtualKeyStorage().giveKeys(player.getName(), crate.getId(), amount);
         }
 
-        AnimationUtils.playEventAnimations(UltimateCrates.getInstance(), player, "key_hunt");
+        String msg = plugin.getMessagesManager().getMessage("messages.events.keyhunt.pfound");
+        msg = ChatColor.translateAlternateColorCodes('&', msg.replace("%keyname%", crate.getKeyName()));
+        player.sendMessage(msg);
+
+        AnimationUtils.playEventAnimations(plugin, player, "key_hunt");
 
         KeyHuntExecutor.end(true);
     }

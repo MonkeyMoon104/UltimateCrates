@@ -4,9 +4,8 @@ import com.monkey.ultimateCrates.UltimateCrates;
 import com.monkey.ultimateCrates.crates.listener.helper.manager.CrateHologramManager;
 import com.monkey.ultimateCrates.crates.model.Crate;
 import com.monkey.ultimateCrates.crates.model.PCE;
-import com.monkey.ultimateCrates.events.TreasureHuntEvent;
+import com.monkey.ultimateCrates.events.helper.TreasureHuntEvent;
 import com.monkey.ultimateCrates.events.util.EventLocationUtils;
-import com.monkey.ultimateCrates.events.util.RegionUtils;
 import de.tr7zw.nbtapi.NBTBlock;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -40,7 +39,7 @@ public class TreasureHuntExecutor {
 
         Location location = EventLocationUtils.getRandomSafePositionFromConfig();
         if (location == null) {
-            UltimateCrates.getInstance().getLogger().warning("TreasureHuntEvent: Nessuna posizione valida trovata nella configurazione.");
+            plugin.getLogger().warning("TreasureHuntEvent: Nessuna posizione valida trovata nella configurazione.");
             return;
         }
 
@@ -95,13 +94,14 @@ public class TreasureHuntExecutor {
         currentTreasureEvent = event;
         running = true;
 
-        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&',
-                "&6[UltimateCrates] &eUn tesoro misterioso è stato nascosto alle coordinate &b" +
-                        location.getBlockX() + " " + location.getBlockY() + " " + location.getBlockZ() + "&e!"));
+        String msg = plugin.getMessagesManager().getMessage("messages.events.treasurehunt.started");
+        msg = ChatColor.translateAlternateColorCodes('&',
+                msg.replace("%x%", String.valueOf(location.getBlockX()))
+                        .replace("%y%", String.valueOf(location.getBlockY()))
+                        .replace("%z%", String.valueOf(location.getBlockZ())));
+        Bukkit.broadcastMessage(msg);
 
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            end(false);
-        }, durationMinutes * 60L * 20L);
+        Bukkit.getScheduler().runTaskLater(plugin, () -> end(false), durationMinutes * 60L * 20L);
     }
 
     public static void end(boolean foundByPlayer) {
@@ -110,16 +110,17 @@ public class TreasureHuntExecutor {
         clear();
         running = false;
 
+        UltimateCrates plugin = UltimateCrates.getInstance();
+        String msg;
         if (foundByPlayer) {
-            Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&',
-                    "&6[UltimateCrates] &aIl &btesoro misterioso &aè stato trovato!"));
+            msg = plugin.getMessagesManager().getMessage("messages.events.treasurehunt.found");
         } else {
-            Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&',
-                    "&6[UltimateCrates] &eL'evento &bTreasure Hunt &eè terminato!"));
+            msg = plugin.getMessagesManager().getMessage("messages.events.treasurehunt.ended");
         }
+        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', msg));
 
-        Bukkit.getScheduler().runTask(UltimateCrates.getInstance(), () -> {
-            UltimateCrates.getInstance().getCrateEventsManager().scheduleRandomEvent(UltimateCrates.getInstance());
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            plugin.getCrateEventsManager().scheduleRandomEvent(plugin);
         });
     }
 

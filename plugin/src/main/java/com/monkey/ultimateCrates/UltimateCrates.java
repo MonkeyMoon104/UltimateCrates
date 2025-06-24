@@ -12,7 +12,6 @@ import com.monkey.ultimateCrates.crates.db.central.DatabaseCrates;
 import com.monkey.ultimateCrates.crates.particles.manager.ParticlesManager;
 import com.monkey.ultimateCrates.database.manager.DatabaseManager;
 import com.monkey.ultimateCrates.events.CrateEventsManager;
-import com.monkey.ultimateCrates.events.KeyHuntEvent;
 import com.monkey.ultimateCrates.events.db.func.EventsDBFunctions;
 import com.monkey.ultimateCrates.events.handler.KeyHuntExecutor;
 import com.monkey.ultimateCrates.events.handler.StatsHuntExecutor;

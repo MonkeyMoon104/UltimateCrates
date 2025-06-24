@@ -1,6 +1,5 @@
-package com.monkey.ultimateCrates.events;
+package com.monkey.ultimateCrates.events.helper;
 
-import org.bukkit.Material;
 import java.util.List;
 
 public class StatsHuntEvent {

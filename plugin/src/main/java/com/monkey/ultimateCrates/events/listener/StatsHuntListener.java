@@ -2,7 +2,7 @@ package com.monkey.ultimateCrates.events.listener;
 
 import com.monkey.ultimateCrates.UltimateCrates;
 import com.monkey.ultimateCrates.crates.model.Crate;
-import com.monkey.ultimateCrates.events.StatsHuntEvent;
+import com.monkey.ultimateCrates.events.helper.StatsHuntEvent;
 import com.monkey.ultimateCrates.events.handler.StatsHuntExecutor;
 import com.monkey.ultimateCrates.util.AnimationUtils;
 import com.monkey.ultimateCrates.util.KeyUtils;
@@ -60,13 +60,13 @@ public class StatsHuntListener implements Listener {
                     .incrementCrateOpen(player.getName(), id, currentEvent.getAmount());
 
             KeyUtils.rewardFunc(player, crate, currentEvent.getAmount());
-
         }
 
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                "&6[UltimateCrates] &aHai aperto una StatChest e ottenuto le stats esegui /cr stats per tenere traccia"));
+        String msg = plugin.getMessagesManager().getMessage("messages.events.statshunt.opened");
+        msg = ChatColor.translateAlternateColorCodes('&', msg);
+        player.sendMessage(msg);
 
-        AnimationUtils.playEventAnimations(UltimateCrates.getInstance(), player, "stats_hunt");
+        AnimationUtils.playEventAnimations(plugin, player, "stats_hunt");
 
         StatsHuntExecutor.end(true);
     }

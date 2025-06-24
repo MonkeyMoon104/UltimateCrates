@@ -4,6 +4,7 @@ messages:
     only_players: "&cSolo i giocatori possono usare questo comando."
     no_permission: "&cNon hai il permesso!"
     reload_success: "&aUltimateCrates ricaricato con successo!"
+    no_permission_event: "&cNon hai il permesso per gli eventi!"
 
   give:
     usage_give: "&cUso corretto: /crate give <crateId> <giocatore>"
@@ -82,3 +83,19 @@ messages:
     not_enough_money: "&cNon hai abbastanza soldi."
     transaction_failed: "&cErrore nella transazione."
     success: "&aHai comprato %amount% chiavi della cassa %crate%&a per &e%price%$."
+
+  events:
+    keyhunt:
+      spawned: "&eUna &dEnderChest &eè apparsa alle coordinate &b%x% %y% %z%&e!"
+      bcfound: "&aLa &dchiave misteriosa &aè stata trovata!"
+      ended: "&eL'evento &dKey Hunt &eè terminato!"
+      pfound: "&aHai trovato la chiave misteriosa! &b%keyname%"
+    statshunt:
+      started: "&eLa StatsChest dell'evento è apparsa alle coordinate &b%x% %y% %z%&e!"
+      found: "&aLa cassa evento è stata trovata!"
+      ended_no_find: "&eL'evento &bStatsChest &eè terminato! Nessuno ha trovato la cassa dell'evento."
+      opened: "&aHai aperto una StatChest e ottenuto le stats esegui /cr stats per tenere traccia"
+    treasurehunt:
+      started: "&eUn tesoro misterioso è stato nascosto alle coordinate &b%x% %y% %z%&e!"
+      found: "&aIl &btesoro misterioso &aè stato trovato!"
+      ended: "&eL'evento &bTreasure Hunt &eè terminato!"
