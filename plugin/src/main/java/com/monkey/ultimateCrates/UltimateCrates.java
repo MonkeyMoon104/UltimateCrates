@@ -11,11 +11,13 @@ import com.monkey.ultimateCrates.crates.animation.AnimationManager;
 import com.monkey.ultimateCrates.crates.db.central.DatabaseCrates;
 import com.monkey.ultimateCrates.crates.particles.manager.ParticlesManager;
 import com.monkey.ultimateCrates.database.manager.DatabaseManager;
-import com.monkey.ultimateCrates.events.CrateEventsManager;
+import com.monkey.ultimateCrates.events.logic.statshunt.StatsHuntState;
+import com.monkey.ultimateCrates.events.manager.CrateEventsManager;
 import com.monkey.ultimateCrates.events.db.func.EventsDBFunctions;
-import com.monkey.ultimateCrates.events.handler.KeyHuntExecutor;
-import com.monkey.ultimateCrates.events.handler.StatsHuntExecutor;
-import com.monkey.ultimateCrates.events.handler.TreasureHuntExecutor;
+import com.monkey.ultimateCrates.events.handler.keyhunt.KeyHuntExecutor;
+import com.monkey.ultimateCrates.events.handler.statshunt.StatsHuntExecutor;
+import com.monkey.ultimateCrates.events.handler.treasurehunt.manager.TreasureHuntExecutor;
+import com.monkey.ultimateCrates.events.logic.keyhunt.KeyHuntState;
 import com.monkey.ultimateCrates.placeholder.UCPlaceholder;
 import com.monkey.ultimateCrates.setup.CrateAnimations;
 import com.monkey.ultimateCrates.setup.CrateListeners;
@@ -177,11 +179,11 @@ public final class UltimateCrates extends JavaPlugin {
             TreasureHuntExecutor.end(false);
         }
 
-        if (KeyHuntExecutor.isRunning()) {
+        if (KeyHuntState.isRunning()) {
             KeyHuntExecutor.end(false);
         }
 
-        if (StatsHuntExecutor.isRunning()) {
+        if (StatsHuntState.isRunning()) {
             StatsHuntExecutor.end(false);
         }
     }

@@ -3,7 +3,8 @@ package com.monkey.ultimateCrates.events.listener;
 import com.monkey.ultimateCrates.UltimateCrates;
 import com.monkey.ultimateCrates.crates.model.Crate;
 import com.monkey.ultimateCrates.events.helper.StatsHuntEvent;
-import com.monkey.ultimateCrates.events.handler.StatsHuntExecutor;
+import com.monkey.ultimateCrates.events.handler.statshunt.StatsHuntExecutor;
+import com.monkey.ultimateCrates.events.logic.statshunt.StatsHuntState;
 import com.monkey.ultimateCrates.util.AnimationUtils;
 import com.monkey.ultimateCrates.util.KeyUtils;
 import de.tr7zw.nbtapi.NBTBlock;
@@ -29,8 +30,8 @@ public class StatsHuntListener implements Listener {
         Block clickedBlock = event.getClickedBlock();
         if (clickedBlock == null || clickedBlock.getType() != Material.ENDER_CHEST) return;
 
-        StatsHuntEvent currentEvent = StatsHuntExecutor.getCurrentEvent();
-        Location expectedLocation = StatsHuntExecutor.getCurrentStatsHuntChestLocation();
+        StatsHuntEvent currentEvent = StatsHuntState.getCurrentEvent();
+        Location expectedLocation = StatsHuntState.getCurrentStatsHuntChestLocation();
         if (currentEvent == null || expectedLocation == null) return;
 
         Location clicked = clickedBlock.getLocation();
@@ -66,6 +67,7 @@ public class StatsHuntListener implements Listener {
         msg = ChatColor.translateAlternateColorCodes('&', msg);
         player.sendMessage(msg);
 
+        AnimationUtils.playEventAnimationsOnChest(plugin, clickedBlock.getLocation(), "stats_hunt");
         AnimationUtils.playEventAnimations(plugin, player, "stats_hunt");
 
         StatsHuntExecutor.end(true);
@@ -76,8 +78,8 @@ public class StatsHuntListener implements Listener {
         Block block = event.getBlock();
         if (block.getType() != Material.ENDER_CHEST) return;
 
-        StatsHuntEvent currentEvent = StatsHuntExecutor.getCurrentEvent();
-        Location expectedLocation = StatsHuntExecutor.getCurrentStatsHuntChestLocation();
+        StatsHuntEvent currentEvent = StatsHuntState.getCurrentEvent();
+        Location expectedLocation = StatsHuntState.getCurrentStatsHuntChestLocation();
         if (currentEvent == null || expectedLocation == null) return;
 
         Location broken = block.getLocation();

@@ -1,12 +1,11 @@
 package com.monkey.ultimateCrates.crates.listener.helper.general;
 
 import com.monkey.ultimateCrates.UltimateCrates;
-import com.monkey.ultimateCrates.crates.listener.helper.util.FireworkUtil;
 import com.monkey.ultimateCrates.crates.model.Crate;
 import com.monkey.ultimateCrates.crates.model.CratePrize;
 import com.monkey.ultimateCrates.crates.util.CratePrizeSelector;
 import com.monkey.ultimateCrates.database.func.vkeys.interf.VirtualKeyStorage;
-import com.monkey.ultimateCrates.events.handler.TreasureHuntExecutor;
+import com.monkey.ultimateCrates.events.handler.treasurehunt.manager.TreasureHuntExecutor;
 import com.monkey.ultimateCrates.util.AnimationUtils;
 import com.monkey.ultimateCrates.util.KeyUtils;
 import de.tr7zw.nbtapi.NBTItem;

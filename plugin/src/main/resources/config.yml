@@ -27,10 +27,12 @@ events:
     key_hunt:
       key_name: "common" #ID della crate presente in crates.yml (otterrà automaticamente la chiave corrispondente)
       player_animation: "bubble_up" #Animazione che viene avviata sul player quando trova la chest evento
+      open_animation: "multi_bolt" #Animazione che viene avviata sulla chest dell'evento quando viene reclamata
       amount: 2 #Numero di chiavi che l'evento dovrà dare al player vincitore
 
     stats_hunt:
       player_animation: "sparkle" #Animazione che viene avviata sul player quando trova la chest evento
+      open_animation: "totem_explosion" #Animazione che viene avviata sulla chest dell'evento quando viene reclamata
       stats_increment: #Lista di ID delle crate per la quali le statistiche devono venire aumentate
         - "common"
         - "legendary"

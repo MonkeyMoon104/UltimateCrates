@@ -3,8 +3,6 @@ package com.monkey.ultimateCrates.crates.listener.list;
 import com.monkey.ultimateCrates.UltimateCrates;
 import com.monkey.ultimateCrates.crates.listener.helper.validators.CrateBlockValidator;
 import com.monkey.ultimateCrates.crates.listener.helper.general.CrateOpener;
-import com.monkey.ultimateCrates.events.handler.KeyHuntExecutor;
-import com.monkey.ultimateCrates.events.handler.TreasureHuntExecutor;
 import de.tr7zw.nbtapi.NBTBlock;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

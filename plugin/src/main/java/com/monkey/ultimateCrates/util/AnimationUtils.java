@@ -33,4 +33,19 @@ public class AnimationUtils {
             );
         });
     }
+
+    public static void playEventAnimationsOnChest(UltimateCrates plugin, Location location, String eventName) {
+        if (eventName == null || eventName.isEmpty()) return;
+
+        var crateEventsManager = plugin.getCrateEventsManager();
+        var animationManager = plugin.getAnimationManager();
+
+        crateEventsManager.getCratesAnimationForEvent(eventName).ifPresent(animationName -> {
+            animationManager.getAnimation(animationName).ifPresentOrElse(
+                    animation -> animation.play(null, location),
+                    () -> plugin.getLogger().warning("Animazione evento non trovata: " + animationName + " per evento: " + eventName)
+            );
+        });
+    }
+
 }

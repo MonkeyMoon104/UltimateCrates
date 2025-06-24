@@ -1,5 +1,6 @@
 package com.monkey.ultimateCrates.setup;
 
+import com.monkey.ultimateCrates.UltimateCrates;
 import com.monkey.ultimateCrates.crates.animation.AnimationManager;
 import com.monkey.ultimateCrates.crates.animation.list.*;
 
@@ -16,5 +17,7 @@ public class CrateAnimations {
         manager.registerAnimation(new FlameRingAnimation());
         manager.registerAnimation(new PortalSwirlAnimation());
         manager.registerAnimation(new BubbleUpAnimation());
+        manager.registerAnimation(new TotemAnimation(UltimateCrates.getInstance()));
+        manager.registerAnimation(new BoltAnimation(UltimateCrates.getInstance()));
     }
 }

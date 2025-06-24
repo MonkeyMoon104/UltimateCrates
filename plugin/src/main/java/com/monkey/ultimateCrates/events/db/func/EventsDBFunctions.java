@@ -1,6 +1,6 @@
 package com.monkey.ultimateCrates.events.db.func;
 
-import com.monkey.ultimateCrates.events.db.EventsDatabase;
+import com.monkey.ultimateCrates.events.db.manager.EventsDatabase;
 
 import java.sql.*;
 

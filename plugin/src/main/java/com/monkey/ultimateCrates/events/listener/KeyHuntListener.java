@@ -2,7 +2,8 @@ package com.monkey.ultimateCrates.events.listener;
 
 import com.monkey.ultimateCrates.UltimateCrates;
 import com.monkey.ultimateCrates.crates.model.Crate;
-import com.monkey.ultimateCrates.events.handler.KeyHuntExecutor;
+import com.monkey.ultimateCrates.events.handler.keyhunt.KeyHuntExecutor;
+import com.monkey.ultimateCrates.events.logic.keyhunt.KeyHuntState;
 import com.monkey.ultimateCrates.util.AnimationUtils;
 import com.monkey.ultimateCrates.util.KeyUtils;
 import de.tr7zw.nbtapi.NBTBlock;
@@ -29,8 +30,8 @@ public class KeyHuntListener implements Listener {
         Block clickedBlock = event.getClickedBlock();
 
         Location clicked = clickedBlock.getLocation();
-        Location active = KeyHuntExecutor.getCurrentKeyHuntChestLocation();
-        Crate crate = KeyHuntExecutor.getCurrentKeyHuntCrate();
+        Location active = KeyHuntState.getLocation();
+        Crate crate = KeyHuntState.getCrate();
 
         if (active == null || crate == null) return;
         if (!clicked.getWorld().equals(active.getWorld())) return;
@@ -46,7 +47,7 @@ public class KeyHuntListener implements Listener {
 
         clickedBlock.setType(Material.AIR);
 
-        int amount = KeyHuntExecutor.getCurrentKeyHuntEvent().getAmount();
+        int amount = KeyHuntState.getEvent().getAmount();
         UltimateCrates plugin = UltimateCrates.getInstance();
 
         if (crate.getKeyType() == Crate.KeyType.PHYSIC) {
@@ -59,6 +60,7 @@ public class KeyHuntListener implements Listener {
         msg = ChatColor.translateAlternateColorCodes('&', msg.replace("%keyname%", crate.getKeyName()));
         player.sendMessage(msg);
 
+        AnimationUtils.playEventAnimationsOnChest(plugin, clickedBlock.getLocation(), "key_hunt");
         AnimationUtils.playEventAnimations(plugin, player, "key_hunt");
 
         KeyHuntExecutor.end(true);
@@ -69,7 +71,7 @@ public class KeyHuntListener implements Listener {
         Block block = event.getBlock();
         if (block.getType() != Material.ENDER_CHEST) return;
 
-        Location active = KeyHuntExecutor.getCurrentKeyHuntChestLocation();
+        Location active = KeyHuntState.getLocation();
         if (active == null) return;
 
         Location broken = block.getLocation();

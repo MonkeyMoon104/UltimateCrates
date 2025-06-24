@@ -25,5 +25,7 @@ public class CrateListeners {
         pm.registerEvents(new CrateRemoveListener(plugin, hologramManager), plugin);
         pm.registerEvents(new KeyHuntListener(), plugin);
         pm.registerEvents(new StatsHuntListener(), plugin);
+        pm.registerEvents(new CrateProtectionListener(hologramManager), plugin);
+
     }
 }
