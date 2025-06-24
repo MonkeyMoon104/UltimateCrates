@@ -135,8 +135,8 @@ events:
 ### `(proxy function)`
 ```yaml
 proxy:
-enabled: false #Abilita per ottenere le notifiche sincronizzate all'avvio di ogni evento, disabilita per non ricevere nulla (Questa funzione serve solo per le notifiche)
-server-name: "servername" #Se abiliti il proxy assicurati di inserire il server-name corretto altrimenti verrà mandato il messaggio di notifica ma senza il server giusto infatti i player non potranno spostarsi nel server dove c'è l'evento!
+  enabled: false #Abilita per ottenere le notifiche sincronizzate all'avvio di ogni evento, disabilita per non ricevere nulla (Questa funzione serve solo per le notifiche)
+  server-name: "servername" #Se abiliti il proxy assicurati di inserire il server-name corretto altrimenti verrà mandato il messaggio di notifica ma senza il server giusto infatti i player non potranno spostarsi nel server dove c'è l'evento!
 ````
 
 ### `crates.yml`
